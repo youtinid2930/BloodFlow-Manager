@@ -1,4 +1,3 @@
-// src/blood-stock/dto/create-blood-stock.dto.ts
 import { IsString, IsNotEmpty, IsDate, IsNumber } from 'class-validator';
 
 export class CreateBloodStockDto {
