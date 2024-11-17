@@ -16,6 +16,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "strict": true,  // Enable strict mode for better type checking
+    "esModuleInterop": true, // Ensures compatibility with CommonJS and ES Modules
   }
 }
