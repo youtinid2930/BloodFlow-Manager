@@ -1,23 +1,25 @@
 import { IsString, IsNotEmpty, IsDate, IsNumber } from 'class-validator';
 
+
 export class CreateBloodStockDto {
+  
   @IsString()
   @IsNotEmpty()
-  blood_type: string;
+  blood_type!: string;
 
   @IsNumber()
   @IsNotEmpty()
-  quantity: number;
+  quantity!: number;
 
   @IsString()
   @IsNotEmpty()
-  storage_location: string;
+  storage_location!: string;
 
   @IsDate()
   @IsNotEmpty()
-  expiry_date: Date;
+  expiry_date!: Date;
 
   @IsDate()
   @IsNotEmpty()
-  last_update: Date;
+  last_update!: Date;
 }

@@ -2,10 +2,8 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateBloodStockDto } from './create-blood_stock.dto';
 import { IsOptional, IsString, IsNumber, IsDateString } from 'class-validator';
 
-export class UpdateBloodStockDto {
-  @IsOptional()
-  @IsString()
-  id?: string;
+
+export class UpdateBloodStockDto extends PartialType(CreateBloodStockDto) {
 
   @IsOptional()
   @IsString()
@@ -21,9 +19,9 @@ export class UpdateBloodStockDto {
 
   @IsOptional()
   @IsDateString()
-  expiry_date?: string;
+  expiry_date?: Date;
 
   @IsOptional()
   @IsDateString()
-  last_update?: string;
+  last_update?: Date;
 }
