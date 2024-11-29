@@ -4,25 +4,22 @@ import { Document } from 'mongoose';
 @Schema()
 export class Request extends Document {
   @Prop({ required: true })
-  id: string;
+  requester_name!: string;
 
   @Prop({ required: true })
-  requester_name: string;
+  blood_type!: string;
 
   @Prop({ required: true })
-  blood_type: string;
-
-  @Prop({ required: true })
-  quantity: number;
+  quantity!: number;
 
   @Prop({ required: true, default: 'pending' })
-  status: string;
+  status!: string;
 
   @Prop({ required: true })
-  request_date: Date;
+  request_date!: Date;
 
   @Prop({ required: true })
-  contact_info: string;
+  contact_info!: string;
 }
 
 export const RequestSchema = SchemaFactory.createForClass(Request);
