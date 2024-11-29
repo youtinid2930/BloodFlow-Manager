@@ -13,7 +13,7 @@ describe('DonationsService', () => {
   beforeAll(async () => {
     await mongoose.connect('mongodb://localhost:27017/BloodFlow');
 
-    // Check if the connection is established and db is accessible
+    
     if (!mongoose.connection.db) {
       throw new Error('Database connection not established');
     }
@@ -32,13 +32,13 @@ describe('DonationsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), // Ensure correct DB connection
-        MongooseModule.forFeature([{ name: Donation.name, schema: DonationSchema }]), // Register the Donation schema
+        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
+        MongooseModule.forFeature([{ name: Donation.name, schema: DonationSchema }]), 
       ],
-      providers: [DonationService], // Make sure the service is provided
+      providers: [DonationService], 
     }).compile();
 
-    service = module.get<DonationService>(DonationService); // Get the DonationService instance
+    service = module.get<DonationService>(DonationService); 
   });
 
   it('create donation', async () => {
