@@ -2,25 +2,21 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BloodStockService } from './blood_stock.service';
 import { BloodStock, BloodStockSchema } from './schemas/blood_stock.schema';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
 
 describe('BloodStockService (Integration)', () => {
   let service: BloodStockService;
-  let mongoServer: MongoMemoryServer;
-
-  // Set up MongoDB connection before any tests run
+  
+    
   beforeAll(async () => {
     await mongoose.connect('mongodb://localhost:27017/BloodFlow');
-
-    // Check if the connection is established and db is accessible
+    
     if (!mongoose.connection.db) {
       throw new Error('Database connection not established');
     }
   });
 
-  // Close the database connection after all tests run
   afterAll(async () => {
     await mongoose.connection.close();
   });
@@ -31,19 +27,20 @@ describe('BloodStockService (Integration)', () => {
     }
   });
 
+  //create a testing module before each test
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), // Ensure correct DB connection
-        MongooseModule.forFeature([{ name: BloodStock.name, schema: BloodStockSchema }]), // Register the BloodStock schema
+        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
+        MongooseModule.forFeature([{ name: BloodStock.name, schema: BloodStockSchema }]), 
       ],
-      providers: [BloodStockService], // Make sure the service is provided
+      providers: [BloodStockService],
     }).compile();
 
-    service = module.get<BloodStockService>(BloodStockService); // Get the BloodStockService instance
+    service = module.get<BloodStockService>(BloodStockService);
   });
 
-  it('should create a blood stock entry', async () => {
+  it('create', async () => {
     const createDto = {
       blood_type: 'A+',
       quantity: 500,
@@ -56,7 +53,7 @@ describe('BloodStockService (Integration)', () => {
     expect(result.blood_type).toBe(createDto.blood_type);
   });
 
-  it('should retrieve all blood stock entries', async () => {
+  it('findAll', async () => {
     const createDto1 = {
       blood_type: 'A+',
       quantity: 500,
@@ -81,7 +78,7 @@ describe('BloodStockService (Integration)', () => {
     expect(result[1]).toHaveProperty('blood_type', 'O-');
   });
 
-  it('should update a blood stock entry', async () => {
+  it('update', async () => {
     const createDto = {
       blood_type: 'A+',
       quantity: 500,
@@ -106,7 +103,7 @@ describe('BloodStockService (Integration)', () => {
     );
   });
 
-  it('should delete a blood stock entry', async () => {
+  it('delete', async () => {
     const createDto = {
       blood_type: 'A+',
       quantity: 500,
@@ -119,7 +116,7 @@ describe('BloodStockService (Integration)', () => {
     const result = await service.remove(created._id);
     expect(result).toBeDefined();
 
-    const allEntries = await service.findAll();
-    expect(allEntries.length).toBe(0);
+    const all = await service.findAll();
+    expect(all.length).toBe(0);
   });
 });
