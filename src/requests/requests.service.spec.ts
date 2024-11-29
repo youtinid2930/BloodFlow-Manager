@@ -56,7 +56,7 @@ describe('RequestsService', () => {
   });
 
 
-  it('retrieve all donations', async () => {
+  it('retrieve all requests', async () => {
     const createDto1 = {
       requester_name: "youssef",
       blood_type: "A+",
@@ -85,7 +85,7 @@ describe('RequestsService', () => {
   });
 
 
-  it('update donation', async () => {
+  it('update request', async () => {
     const createDto = {
       requester_name: "youssef",
       blood_type: "A+",
@@ -107,7 +107,7 @@ describe('RequestsService', () => {
   });
 
 
-  it('delete donation', async () => {
+  it('delete request', async () => {
     const createDto = {
       requester_name: "youssef",
       blood_type: "A+",
