@@ -2,13 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BloodStockService } from './blood_stock.service';
 import { BloodStock, BloodStockSchema } from './schemas/blood_stock.schema';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+
 import mongoose from 'mongoose';
 
 
 describe('BloodStockService (Integration)', () => {
   let service: BloodStockService;
-  let mongoServer: MongoMemoryServer;
+  
 
   // Set up MongoDB connection before any tests run
   beforeAll(async () => {
@@ -89,6 +89,7 @@ describe('BloodStockService (Integration)', () => {
       expiry_date: new Date('2024-12-01'),
       last_update: new Date('2024-10-01'),
     };
+    
     const created = await service.create(createDto);
 
     const updateDto = {
