@@ -86,6 +86,7 @@ describe('BloodStockService (Integration)', () => {
       expiry_date: new Date('2024-12-01'),
       last_update: new Date('2024-10-01'),
     };
+    
     const created = await service.create(createDto);
 
     const updateDto = {

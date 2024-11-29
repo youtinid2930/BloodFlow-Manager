@@ -1,28 +1,28 @@
 import { IsNotEmpty, IsString, IsNumber, IsEnum, IsOptional, IsDateString } from 'class-validator';
 
+import { Types } from 'mongoose';
+
 export class CreateDonationDto {
   @IsNotEmpty()
   @IsString()
-  donor_id: string; // Foreign key referencing the donor
+  donor_id!: Types.ObjectId; 
 
   @IsNotEmpty()
   @IsDateString()
-  donation_date: string; // ISO date string format
-
+  donation_date!: Date; 
   @IsNotEmpty()
   @IsString()
-  blood_type: string; // Blood type (e.g., A+, O-, etc.)
-
+  blood_type!: string; 
   @IsNotEmpty()
   @IsNumber()
-  quantity: number; // Quantity in milliliters or units
+  quantity!: number; 
 
   @IsOptional()
   @IsEnum(['pending', 'tested', 'approved', 'rejected'])
-  status?: string; // Default is pending
+  status?: string; 
 
   @IsNotEmpty()
   @IsString()
-  location: string; // Location of donation
+  location!: string; 
 }
 
