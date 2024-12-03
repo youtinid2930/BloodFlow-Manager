@@ -3,6 +3,7 @@ import { HistoriqueService } from './historique.service';
 import { CreateHistoriqueDto } from './dto/create-historique.dto';
 import { UpdateHistoriqueDto } from './dto/update-historique.dto';
 
+
 @Controller('historique')
 export class HistoriqueController {
   constructor(private readonly historiqueService: HistoriqueService) {}
@@ -19,16 +20,16 @@ export class HistoriqueController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.historiqueService.findOne(+id);
+    return this.historiqueService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateHistoriqueDto: UpdateHistoriqueDto) {
-    return this.historiqueService.update(+id, updateHistoriqueDto);
+    return this.historiqueService.update(id, updateHistoriqueDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.historiqueService.remove(+id);
+    return this.historiqueService.remove(id);
   }
 }
