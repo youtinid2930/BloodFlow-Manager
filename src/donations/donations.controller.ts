@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { DonationsService } from './donations.service';
+import { DonationService } from './donations.service';
 import { CreateDonationDto } from './dto/create-donation.dto';
 import { UpdateDonationDto } from './dto/update-donation.dto';
+import mongoose from 'mongoose'; 
 
 @Controller('donations')
 export class DonationsController {
-  constructor(private readonly donationsService: DonationsService) {}
+  constructor(private readonly donationsService: DonationService) {}
 
   @Post()
   create(@Body() createDonationDto: CreateDonationDto) {
@@ -21,6 +22,8 @@ export class DonationsController {
   findOne(@Param('id') id: string) {
     return this.donationsService.findOne(+id);
   }
+  
+  
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDonationDto: UpdateDonationDto) {

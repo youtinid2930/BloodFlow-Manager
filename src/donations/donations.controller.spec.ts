@@ -1,14 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { MongooseModule } from '@nestjs/mongoose';
 import { DonationsController } from './donations.controller';
-import { DonationsService } from './donations.service';
+import { DonationService } from './donations.service';
+import { Donation, DonationSchema } from './schemas/donations.schema';
 
-describe('DonationsController', () => {
+describe('DonationController', () => {
   let controller: DonationsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
+        MongooseModule.forFeature([{ name: Donation.name, schema: DonationSchema }]),
+      ],
       controllers: [DonationsController],
-      providers: [DonationsService],
+      providers: [DonationService],
     }).compile();
 
     controller = module.get<DonationsController>(DonationsController);
@@ -18,3 +24,4 @@ describe('DonationsController', () => {
     expect(controller).toBeDefined();
   });
 });
+

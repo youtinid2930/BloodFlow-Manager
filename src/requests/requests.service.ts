@@ -1,29 +1,54 @@
 import { CreateRequestDto } from './dto/create-request.dto';
-import { UpdateRequestDto } from './dto/update-request.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose'; 
 import { Request } from './schemas/request.schema';
+import { UpdateRequestDto } from './dto/update-request.dto';
 
 @Injectable()
-export class RequestsService {
-  create(createRequestDto: CreateRequestDto) {
-    return 'This action adds a new request';
+export class RequestService {
+  constructor(
+    @InjectModel(Request.name) private RequestModel: Model<Request>,
+  ) {}
+
+  async create(createRequestDto: CreateRequestDto): Promise<Request> {
+    const createdRequest = new this.RequestModel(createRequestDto);
+
+    const savedRequest = await createdRequest.save();
+    if (!savedRequest) {
+      throw new Error('Failed to create blood stock');
+    }
+
+    return savedRequest;
   }
 
   findAll() {
-    return `This action returns all requests`;
+    return this.RequestModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} request`;
+  findOne(id: any) {
+    return this.RequestModel.findById(id).exec();
   }
-
-  update(id: number, updateRequestDto: UpdateRequestDto) {
-    return `This action updates a #${id} request`;
+  
+  async update(id: any, updateRequestDto: UpdateRequestDto): Promise<Request> {
+    const updatedRequest = await this.RequestModel
+      .findByIdAndUpdate(id, updateRequestDto, { new: true })
+      .exec();
+  
+    if (!updatedRequest) {
+      throw new Error(`Blood stock with ID ${id} not found`);
+    }
+  
+    return updatedRequest;
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} request`;
+  
+  async remove(id: any): Promise<Request> {
+    const removedRequest = await this.RequestModel.findByIdAndDelete(id).exec();
+  
+    if (!removedRequest) {
+      throw new Error(`Blood stock with ID ${id} not found`);
+    }
+  
+    return removedRequest;
   }
 }

@@ -1,29 +1,54 @@
 import { CreateDonationDto } from './dto/create-donation.dto';
-import { UpdateDonationDto } from './dto/update-donation.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose'; 
 import { Donation } from './schemas/donations.schema';
+import { UpdateDonationDto } from './dto/update-donation.dto';
 
 @Injectable()
-export class DonationsService {
-  create(createDonationDto: CreateDonationDto) {
-    return 'This action adds a new donation';
+export class DonationService {
+  constructor(
+    @InjectModel(Donation.name) private DonationModel: Model<Donation>,
+  ) {}
+
+  async create(createDonationDto: CreateDonationDto): Promise<Donation> {
+    const createdDonation = new this.DonationModel(createDonationDto);
+
+    const savedDonation = await createdDonation.save();
+    if (!savedDonation) {
+      throw new Error('Failed to create blood stock');
+    }
+
+    return savedDonation;
   }
 
   findAll() {
-    return `This action returns all donations`;
+    return this.DonationModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} donation`;
+  findOne(id: any) {
+    return this.DonationModel.findById(id).exec();
   }
-
-  update(id: number, updateDonationDto: UpdateDonationDto) {
-    return `This action updates a #${id} donation`;
+  
+  async update(id: any, updateDonationDto: UpdateDonationDto): Promise<Donation> {
+    const updatedDonation = await this.DonationModel
+      .findByIdAndUpdate(id, updateDonationDto, { new: true })
+      .exec();
+  
+    if (!updatedDonation) {
+      throw new Error(`Blood stock with ID ${id} not found`);
+    }
+  
+    return updatedDonation;
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} donation`;
+  
+  async remove(id: any): Promise<Donation> {
+    const removedDonation = await this.DonationModel.findByIdAndDelete(id).exec();
+  
+    if (!removedDonation) {
+      throw new Error(`Blood stock with ID ${id} not found`);
+    }
+  
+    return removedDonation;
   }
 }

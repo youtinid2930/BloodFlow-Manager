@@ -1,20 +1,15 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateDonorDto } from './create-donor.dto';
-
-import { IsOptional, IsString, IsDateString } from 'class-validator';
-
+import { IsOptional, IsString, IsDate } from 'class-validator';
 export class UpdateDonorDto {
-  @IsOptional()
-  @IsString()
-  id?: string; 
 
   @IsOptional()
   @IsString()
   name?: string; 
 
   @IsOptional()
-  @IsDateString()
-  date_naiss?: string; 
+  @IsDate()
+  date_naiss?: Date; 
 
   @IsOptional()
   @IsString()
@@ -25,6 +20,7 @@ export class UpdateDonorDto {
   contact_info?: string; 
 
   @IsOptional()
-  @IsDateString()
-  last_donation_date?: string; 
+  @IsDate()
+  last_donation_date?: Date; 
+  
 }

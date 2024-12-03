@@ -1,27 +1,23 @@
-import { IsNotEmpty, IsString, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsString, IsDate } from 'class-validator';
 
 export class CreateDonorDto {
-  @IsNotEmpty()
+   @IsNotEmpty()
   @IsString()
-  id: string; 
+  name!: string; 
 
   @IsNotEmpty()
-  @IsString()
-  name: string; 
-
-  @IsNotEmpty()
-  @IsDateString()
-  date_naiss: string; 
+  @IsDate()
+  date_naiss!: Date;
 
   @IsNotEmpty()
   @IsString()
-  blood_type: string; 
+  blood_type!: string; 
 
   @IsNotEmpty()
   @IsString()
-  contact_info: string; 
+  contact_info!: string; 
 
   @IsNotEmpty()
-  @IsDateString()
-  last_donation_date: string;
+  @IsDate()
+  last_donation_date!: Date;
 }
