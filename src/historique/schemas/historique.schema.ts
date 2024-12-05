@@ -1,10 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema()
+//@Schema()
+@Schema() 
 export class Historique extends Document {
-  @Prop({ required: true })
-  id!: string;
 
   @Prop({ required: true })
   type!: string;

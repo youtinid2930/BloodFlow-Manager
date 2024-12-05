@@ -1,10 +1,8 @@
 import { IsNotEmpty, IsString, IsArray } from 'class-validator';
 
-export class CreateHistoriqueDto {
-  @IsNotEmpty()
-  @IsString()
-  id!: string;
+import {Types} from 'mongoose';
 
+export class CreateHistoriqueDto {
   @IsNotEmpty()
   @IsString()
   type!: string;

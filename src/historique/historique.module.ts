@@ -6,7 +6,7 @@ import { HistoriqueController } from './historique.controller';
 
 
 @Module({
-  imports:[MongooseModule.forFeature([{name: Historique.name, schema:HistoriqueSchema}])],
+  imports:[MongooseModule.forFeature([{name: Historique.name, schema:HistoriqueSchema}]), Historique],
   controllers: [HistoriqueController],
   providers: [HistoriqueService],
 })
