@@ -50,7 +50,7 @@ describe('BloodStockService (Integration)', () => {
     };
     const result = await service.create(createDto);
     expect(result).toHaveProperty('_id');
-    expect(result.blood_type).toBe(createDto.blood_type);
+    expect(result.blood_type).toBe("A+");
   });
 
   it('findAll', async () => {
