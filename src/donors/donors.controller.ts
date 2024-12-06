@@ -17,18 +17,21 @@ export class DonorsController {
     return this.donorsService.findAll();
   }
 
+
+  //search by id or name
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.donorsService.findOne(+id);
+    return this.donorsService.findOne(id);
   }
+  
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDonorDto: UpdateDonorDto) {
-    return this.donorsService.update(+id, updateDonorDto);
+    return this.donorsService.update(id, updateDonorDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.donorsService.remove(+id);
+    return this.donorsService.remove(id);
   }
 }

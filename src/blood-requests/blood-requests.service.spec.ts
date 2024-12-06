@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RequestService } from './requests.service';
-import { Request, RequestSchema } from './schemas/request.schema';
+import { BloodRequestService } from './blood-requests.service';
+import { BloodRequest, BloodRequestSchema } from './schemas/blood-requests.schema';
 import { Types } from 'mongoose';
 import mongoose from 'mongoose';
 
 
 describe('RequestsService', () => {
-  let service: RequestService;
+  let service: BloodRequestService;
 
   beforeAll(async () => {
     await mongoose.connect('mongodb://localhost:27017/BloodFlow');
@@ -32,12 +32,12 @@ describe('RequestsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
-        MongooseModule.forFeature([{ name: Request.name, schema: RequestSchema }]), 
+        MongooseModule.forFeature([{ name: Request.name, schema: BloodRequestSchema }]), 
       ],
-      providers: [RequestService], 
+      providers: [BloodRequestService], 
     }).compile();
 
-    service = module.get<RequestService>(RequestService); 
+    service = module.get<BloodRequestService>(BloodRequestService); 
   });
 
   it('create requests', async () => {

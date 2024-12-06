@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RequestService } from './requests.service';
-import { CreateRequestDto } from './dto/create-request.dto';
-import {  UpdateRequestDto} from './dto/update-request.dto';
+import { BloodRequestService } from './blood-requests.service';
+import { CreateRequestDto } from './dto/create-blood-requests.dto';
+import {  UpdateRequestDto} from './dto/update-blood-requests.dto';
 
-@Controller('requests')
-export class RequestsController {
-  constructor(private readonly requestsService: RequestService) {}
+@Controller('bloodrequest')
+export class BloodRequestController {
+  constructor(private readonly requestsService: BloodRequestService) {}
 
   @Post()
   create(@Body() createRequestDto: CreateRequestDto) {

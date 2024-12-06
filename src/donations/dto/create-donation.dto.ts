@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsNumber, IsEnum, IsOptional, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsEnum, IsOptional, IsDate } from 'class-validator';
+import {  Transform  } from 'class-transformer';
 
 import { Types } from 'mongoose';
 
@@ -8,11 +9,14 @@ export class CreateDonationDto {
   donor_id!: Types.ObjectId; 
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
+  @Transform(({ value }) => new Date(value))
   donation_date!: Date; 
+
   @IsNotEmpty()
   @IsString()
   blood_type!: string; 
+
   @IsNotEmpty()
   @IsNumber()
   quantity!: number; 
