@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsNumber, IsDateString, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsDate, IsEnum } from 'class-validator';
+import {  Transform  } from 'class-transformer';
 
 import { Types } from 'mongoose';
 
@@ -21,7 +22,8 @@ export class CreateRequestDto {
   status!: string;
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
+  @Transform(({ value }) => new Date(value))
   request_date!: Date;
 
   @IsNotEmpty()

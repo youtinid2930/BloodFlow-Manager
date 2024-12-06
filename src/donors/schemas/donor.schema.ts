@@ -8,6 +8,7 @@ export class Donor extends Document {
   name!: string; 
 
   @Prop({ required: true })
+
   date_naiss!: Date; 
 
   @Prop({ required: true })
@@ -21,3 +22,4 @@ export class Donor extends Document {
 }
 
 export const DonorSchema = SchemaFactory.createForClass(Donor);
+

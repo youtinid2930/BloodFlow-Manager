@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
-export class Request extends Document {
+export class BloodRequest extends Document {
   @Prop({ required: true })
   requester_name!: string;
 
@@ -22,4 +22,4 @@ export class Request extends Document {
   contact_info!: string;
 }
 
-export const RequestSchema = SchemaFactory.createForClass(Request);
+export const BloodRequestSchema = SchemaFactory.createForClass(BloodRequest);

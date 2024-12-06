@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsDate } from 'class-validator';
+import { IsNotEmpty, IsString, IsDate,IsEnum } from 'class-validator';
+import {  Transform  } from 'class-transformer';
 
 export class CreateDonorDto {
    @IsNotEmpty()
@@ -6,11 +7,14 @@ export class CreateDonorDto {
   name!: string; 
 
   @IsNotEmpty()
+  @Transform(({ value }) => new Date(value))
   @IsDate()
   date_naiss!: Date;
 
+  
+
   @IsNotEmpty()
-  @IsString()
+  @IsEnum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], { message: 'Invalid' })
   blood_type!: string; 
 
   @IsNotEmpty()
@@ -18,6 +22,7 @@ export class CreateDonorDto {
   contact_info!: string; 
 
   @IsNotEmpty()
+  @Transform(({ value }) => new Date(value))
   @IsDate()
   last_donation_date!: Date;
 }

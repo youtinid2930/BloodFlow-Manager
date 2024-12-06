@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateDonorDto } from './create-donor.dto';
-import { IsOptional, IsString, IsDate } from 'class-validator';
+import { IsOptional, IsString, IsDate,IsEnum } from 'class-validator';
+import { Transform } from 'class-transformer';
 export class UpdateDonorDto {
 
   @IsOptional()
@@ -8,11 +9,12 @@ export class UpdateDonorDto {
   name?: string; 
 
   @IsOptional()
+  @Transform(({ value }) => new Date(value))
   @IsDate()
   date_naiss?: Date; 
 
   @IsOptional()
-  @IsString()
+  @IsEnum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], { message: 'Invalid' })
   blood_type?: string; 
 
   @IsOptional()
@@ -20,6 +22,7 @@ export class UpdateDonorDto {
   contact_info?: string; 
 
   @IsOptional()
+  @Transform(({ value }) => new Date(value))
   @IsDate()
   last_donation_date?: Date; 
   

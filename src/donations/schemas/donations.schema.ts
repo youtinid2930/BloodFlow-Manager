@@ -4,7 +4,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 @Schema()
 export class Donation extends Document {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Donor', required: true })
-  donor_id!: string;
+  donor_id!: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: Date, required: true })
   donation_date!: Date;

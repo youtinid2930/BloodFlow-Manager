@@ -3,8 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DonorsModule } from './donors/donors.module';
-import { RequestModule } from './requests/requests.module';
-import { HistoriqueModule } from './historique/historique.module';
+import { BloodRequestModule } from './blood-requests/blood-requests.module';
 import { DonationsModule } from './donations/donations.module';
 import { BloodStockModule } from './blood_stock/blood_stock.module';
 
@@ -14,8 +13,7 @@ import { BloodStockModule } from './blood_stock/blood_stock.module';
     DonorsModule,
     DonationsModule,
     BloodStockModule,
-    RequestModule,
-    HistoriqueModule,
+    BloodRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService],
