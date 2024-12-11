@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+<<<<<<< Updated upstream
 import { DonationsService } from './donations.service';
 import { CreateDonationDto } from './dto/create-donation.dto';
 import { UpdateDonationDto } from './dto/update-donation.dto';
@@ -6,6 +7,16 @@ import { UpdateDonationDto } from './dto/update-donation.dto';
 @Controller('donations')
 export class DonationsController {
   constructor(private readonly donationsService: DonationsService) {}
+=======
+import { DonationService } from './donations.service';
+import { CreateDonationDto } from './dto/create-donation.dto';
+import { UpdateDonationDto } from './dto/update-donation.dto';
+import mongoose from 'mongoose'; 
+
+@Controller('donations')
+export class DonationsController {
+  constructor(private readonly donationsService: DonationService) {}
+>>>>>>> Stashed changes
 
   @Post()
   create(@Body() createDonationDto: CreateDonationDto) {
@@ -21,6 +32,11 @@ export class DonationsController {
   findOne(@Param('id') id: string) {
     return this.donationsService.findOne(+id);
   }
+<<<<<<< Updated upstream
+=======
+  
+  
+>>>>>>> Stashed changes
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDonationDto: UpdateDonationDto) {

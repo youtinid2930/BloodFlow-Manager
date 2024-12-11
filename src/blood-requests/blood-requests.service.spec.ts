@@ -1,26 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-<<<<<<< Updated upstream
-import { DonationsService } from './donations.service';
-
-describe('DonationsService', () => {
-  let service: DonationsService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [DonationsService],
-    }).compile();
-
-    service = module.get<DonationsService>(DonationsService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-=======
 import { MongooseModule } from '@nestjs/mongoose';
-import { DonationService } from './donations.service';
-import { Donation, DonationSchema } from './schemas/donations.schema';
-import { Types } from 'mongoose';
+import { BloodRequestService } from './blood-requests.service';
+import { BloodRequest, BloodRequestSchema } from './schemas/blood-requests.schema';
 import mongoose from 'mongoose';
 
 
@@ -30,10 +11,9 @@ dotenv.config();
 
 jest.setTimeout(20000);
 
-describe('DonationsService', () => {
-  let service: DonationService;
+describe('RequestsService', () => {
+  let service: BloodRequestService;
 
-  
   beforeAll(async () => {
     await mongoose.connect(process.env.MONGO_URI!);
 
@@ -57,21 +37,22 @@ describe('DonationsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(process.env.MONGO_URI!), 
-        MongooseModule.forFeature([{ name: Donation.name, schema: DonationSchema }]), 
+        MongooseModule.forFeature([{ name: BloodRequest.name, schema: BloodRequestSchema }]), 
       ],
-      providers: [DonationService], 
+      providers: [BloodRequestService], 
     }).compile();
 
-    service = module.get<DonationService>(DonationService); 
+    service = module.get<BloodRequestService>(BloodRequestService); 
   });
 
-  it('create donation', async () => {
+  it('create requests', async () => {
     const createDto = {
-      donor_id : new Types.ObjectId(),
-      donation_date: new Date('2024-12-01'),
-      blood_type: 'A+',
+      requester_name: "youssef",
+      blood_type: "A+",
       quantity: 500,
-      location: "Room 101",
+      status: "pending",
+      request_date: new Date('2024-12-01'),
+      contact_info : "0684938838",
     };
 
     const resutl = await service.create(createDto);
@@ -80,21 +61,23 @@ describe('DonationsService', () => {
   });
 
 
-  it('retrieve all donations', async () => {
+  it('retrieve all requests', async () => {
     const createDto1 = {
-      donor_id : new Types.ObjectId(),
-      donation_date: new Date('2024-12-01'),
-      blood_type: 'A+',
+      requester_name: "youssef",
+      blood_type: "A+",
       quantity: 500,
-      location: "Room 101",
+      status: "pending",
+      request_date: new Date('2024-12-01'),
+      contact_info : "0684938838",
     };
 
     const createDto2 = {
-      donor_id : new Types.ObjectId(),
-      donation_date: new Date('2024-12-01'),
-      blood_type: 'O-',
-      quantity: 500,
-      location: "Room 102",
+      requester_name: "Ahemef",
+      blood_type: "B+",
+      quantity: 600,
+      status: "pending",
+      request_date: new Date('2024-12-01'),
+      contact_info : "067438388",
     };
 
     await service.create(createDto1);
@@ -103,38 +86,40 @@ describe('DonationsService', () => {
     const result = await service.findAll();
     expect(result.length).toBe(2);
     expect(result[0]).toHaveProperty('blood_type', 'A+');
-    expect(result[1]).toHaveProperty('blood_type', 'O-');
+    expect(result[1]).toHaveProperty('blood_type', 'B+');
   });
-  
 
-  it('update donation', async () => {
+
+  it('update request', async () => {
     const createDto = {
-      donor_id : new Types.ObjectId(),
-      donation_date: new Date('2024-12-01'),
-      blood_type: 'A+',
+      requester_name: "youssef",
+      blood_type: "A+",
       quantity: 500,
-      location: "Room 101",
+      status: "pending",
+      request_date: new Date('2024-12-01'),
+      contact_info : "0684938838",
     };
     const created = await service.create(createDto);
 
     const updateDto = {
+      blood_type: "A-",
       quantity: 600,
-      location: 'Room 102',
     };
 
     const updated = await service.update(created._id, updateDto);
     expect(updated.quantity).toBe(600);
-    expect(updated.location).toBe(updateDto.location);
+    expect(updated.blood_type).toBe(updateDto.blood_type);
   });
 
 
-  it('delete donation', async () => {
+  it('delete request', async () => {
     const createDto = {
-      donor_id : new Types.ObjectId(),
-      donation_date: new Date('2024-12-01'),
-      blood_type: 'A+',
+      requester_name: "youssef",
+      blood_type: "A+",
       quantity: 500,
-      location: "Room 101",
+      status: "pending",
+      request_date: new Date('2024-12-01'),
+      contact_info : "0684938838",
     };
 
     const created = await service.create(createDto);
@@ -145,6 +130,4 @@ describe('DonationsService', () => {
     const allEntries = await service.findAll();
     expect(allEntries.length).toBe(0);
   });
-
->>>>>>> Stashed changes
 });
