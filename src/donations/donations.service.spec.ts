@@ -6,12 +6,18 @@ import { Types } from 'mongoose';
 import mongoose from 'mongoose';
 
 
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+jest.setTimeout(20000);
+
 describe('DonationsService', () => {
   let service: DonationService;
 
   
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/BloodFlow');
+    await mongoose.connect(process.env.MONGO_URI!);
 
     
     if (!mongoose.connection.db) {
@@ -32,7 +38,7 @@ describe('DonationsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
+        MongooseModule.forRoot(process.env.MONGO_URI!), 
         MongooseModule.forFeature([{ name: Donation.name, schema: DonationSchema }]), 
       ],
       providers: [DonationService], 

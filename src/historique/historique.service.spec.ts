@@ -3,7 +3,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { HistoriqueService } from './historique.service';
 import { Historique, HistoriqueSchema } from './schemas/historique.schema';
 import mongoose from 'mongoose';
-import { Types } from 'mongoose';
+
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 describe('BloodStockService (Integration)', () => {
   let service: HistoriqueService;
@@ -11,7 +14,7 @@ describe('BloodStockService (Integration)', () => {
 
   // Set up MongoDB connection before any tests run
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/BloodFlow');
+    await mongoose.connect(process.env.MONGO_URI!);
 
     // Check if the connection is established and db is accessible
     if (!mongoose.connection.db) {
@@ -33,7 +36,7 @@ describe('BloodStockService (Integration)', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), // Ensure correct DB connection
+        MongooseModule.forRoot(process.env.MONGO_URI!), // Ensure correct DB connection
         MongooseModule.forFeature([{ name: Historique.name, schema: HistoriqueSchema }]), // Register the BloodStock schema
       ],
       providers: [HistoriqueService], // Make sure the service is provided

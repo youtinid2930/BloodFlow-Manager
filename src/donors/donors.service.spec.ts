@@ -5,6 +5,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Donor, DonorSchema } from './schemas/donor.schema';
 import mongoose from 'mongoose';
 
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+jest.setTimeout(20000);
+
 describe('DonorsService (Intergration)',()=>{
   // Service under test
   let service: DonorsService;
@@ -12,7 +18,7 @@ describe('DonorsService (Intergration)',()=>{
 
   //test database connection
   beforeAll(async()=>{
-    await mongoose.connect('mongodb://localhost:27017/BloodFlow');
+    await mongoose.connect(process.env.MONGO_URI!);
     if(!mongoose.connection.db){
       throw new Error('Database connection not established');
     }
@@ -33,7 +39,7 @@ describe('DonorsService (Intergration)',()=>{
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'),
+        MongooseModule.forRoot(process.env.MONGO_URI!),
         MongooseModule.forFeature([{ name: Donor.name, schema: DonorSchema }]), 
       ],
       providers: [DonorsService],
