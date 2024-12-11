@@ -13,6 +13,12 @@ dotenv.config();
 
 jest.setTimeout(20000);
 
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+jest.setTimeout(20000);
+
 describe('DonationsService', () => {
   let service: DonationService;
   let donorService: DonorsService; // Inject DonorsService
@@ -39,11 +45,13 @@ describe('DonationsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+
         MongooseModule.forRoot(process.env.MONGO_URI!),
         MongooseModule.forFeature([
           { name: Donation.name, schema: DonationSchema },
           { name: Donor.name, schema: DonorSchema },
         ]),
+
       ],
       providers: [DonationService, DonorsService],
     }).compile();
