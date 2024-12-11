@@ -13,10 +13,13 @@ import { DonationsModule } from './donations/donations.module';
 import { UserModule } from './user/user.module';
 >>>>>>> Stashed changes
 import { BloodStockModule } from './blood_stock/blood_stock.module';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'),
+    MongooseModule.forRoot(process.env.MONGO_URI!),
     DonorsModule,
     DonationsModule,
     BloodStockModule,

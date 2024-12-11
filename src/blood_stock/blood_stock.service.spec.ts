@@ -1,13 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-<<<<<<< HEAD
-import { BloodStockService } from './blood_stock.service';
-
-describe('BloodStockService', () => {
-  let service: BloodStockService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-=======
 import { MongooseModule } from '@nestjs/mongoose';
 import { BloodStockService } from './blood_stock.service';
 import { BloodStock, BloodStockSchema } from './schemas/blood_stock.schema';
@@ -48,17 +39,12 @@ describe('BloodStockService (Integration)', () => {
         MongooseModule.forRoot(process.env.MONGO_URI!), 
         MongooseModule.forFeature([{ name: BloodStock.name, schema: BloodStockSchema }]), 
       ],
->>>>>>> ffb8c53ed045b6f03afe75205f439d4039198d18
       providers: [BloodStockService],
     }).compile();
 
     service = module.get<BloodStockService>(BloodStockService);
   });
 
-<<<<<<< HEAD
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-=======
   it('create', async () => {
     const createDto = {
       blood_type: 'A+',
@@ -138,6 +124,5 @@ describe('BloodStockService (Integration)', () => {
 
     const all = await service.findAll();
     expect(all.length).toBe(0);
->>>>>>> ffb8c53ed045b6f03afe75205f439d4039198d18
   });
 });

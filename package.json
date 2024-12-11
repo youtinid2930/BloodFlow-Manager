@@ -1,5 +1,5 @@
 {
-  "name": "BloodFlow",
+  "name": "bloodflow",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -29,12 +29,8 @@
     "@nestjs/platform-express": "^10.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-<<<<<<< HEAD
-    "mongoose": "^8.7.3",
-=======
     "dotenv": "^16.4.7",
     "mongoose": "^8.8.3",
->>>>>>> ffb8c53ed045b6f03afe75205f439d4039198d18
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
@@ -45,16 +41,8 @@
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
-<<<<<<< Updated upstream
-    "@types/node": "^20.3.1",
-=======
-<<<<<<< HEAD
-    "@types/node": "^22.9.0",
-=======
     "@types/mongodb": "^4.0.6",
     "@types/node": "^22.9.3",
->>>>>>> ffb8c53ed045b6f03afe75205f439d4039198d18
->>>>>>> Stashed changes
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",

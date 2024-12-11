@@ -1,22 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-<<<<<<< Updated upstream
-import { DonationsService } from './donations.service';
-
-describe('DonationsService', () => {
-  let service: DonationsService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [DonationsService],
-    }).compile();
-
-    service = module.get<DonationsService>(DonationsService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-=======
 import { MongooseModule } from '@nestjs/mongoose';
 import { DonationService } from './donations.service';
 import { Donation, DonationSchema } from './schemas/donations.schema';
@@ -146,5 +128,4 @@ describe('DonationsService', () => {
     expect(allEntries.length).toBe(0);
   });
 
->>>>>>> Stashed changes
 });

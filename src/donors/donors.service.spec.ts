@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-import { Test, TestingModule } from '@nestjs/testing';
-import { DonorsService } from './donors.service';
-
-describe('DonorsService', () => {
-  let service: DonorsService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [DonorsService],
-    }).compile();
-
-    service = module.get<DonorsService>(DonorsService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});
-=======
 import { CreateDonorDto } from './dto/create-donor.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DonorsService } from './donors.service';
@@ -158,4 +138,3 @@ describe('DonorsService (Intergration)',()=>{
 });
 
 
->>>>>>> ffb8c53ed045b6f03afe75205f439d4039198d18

@@ -1,21 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-<<<<<<< HEAD
-import { HistoriqueService } from './historique.service';
-
-describe('HistoriqueService', () => {
-  let service: HistoriqueService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [HistoriqueService],
-    }).compile();
-
-    service = module.get<HistoriqueService>(HistoriqueService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-=======
 import { MongooseModule } from '@nestjs/mongoose';
 import { HistoriqueService } from './historique.service';
 import { Historique, HistoriqueSchema } from './schemas/historique.schema';
@@ -125,6 +108,5 @@ describe('BloodStockService (Integration)', () => {
 
     const allEntries = await service.findAll();
     expect(allEntries.length).toBe(0);
->>>>>>> ffb8c53ed045b6f03afe75205f439d4039198d18
   });
 });

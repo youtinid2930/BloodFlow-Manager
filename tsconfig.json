@@ -15,15 +15,8 @@
     "resolveJsonModule": true, // added
     "noImplicitAny": true,
     "strictBindCallApply": false,
-<<<<<<< HEAD
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "strict": true,  // Enable strict mode for better type checking
-    "esModuleInterop": true, // Ensures compatibility with CommonJS and ES Modules
-=======
     "strict": true,  // Enable strict mode for better type checking
     "esModuleInterop": true, // Ensures compatibility with CommonJS and ES Modules
     "moduleResolution": "node" // added
->>>>>>> ffb8c53ed045b6f03afe75205f439d4039198d18
   }
 }
