@@ -4,14 +4,20 @@ import { BloodRequestController } from './blood-requests.controller';
 import { BloodRequestService } from './blood-requests.service';
 import { BloodRequest, BloodRequestSchema } from './schemas/blood-requests.schema';
 
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+jest.setTimeout(20000);
+
 describe('Request Controller', () => {
   let controller: BloodRequestController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
-        MongooseModule.forFeature([{ name: Request.name, schema: BloodRequestSchema }]),
+        MongooseModule.forRoot(process.env.MONGO_URI!), 
+        MongooseModule.forFeature([{ name: BloodRequest.name, schema: BloodRequestSchema }]),
       ],
       controllers: [BloodRequestController],
       providers: [BloodRequestService],

@@ -2,15 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BloodRequestService } from './blood-requests.service';
 import { BloodRequest, BloodRequestSchema } from './schemas/blood-requests.schema';
-import { Types } from 'mongoose';
 import mongoose from 'mongoose';
 
+
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+jest.setTimeout(20000);
 
 describe('RequestsService', () => {
   let service: BloodRequestService;
 
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/BloodFlow');
+    await mongoose.connect(process.env.MONGO_URI!);
 
     
     if (!mongoose.connection.db) {
@@ -31,8 +36,8 @@ describe('RequestsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
-        MongooseModule.forFeature([{ name: Request.name, schema: BloodRequestSchema }]), 
+        MongooseModule.forRoot(process.env.MONGO_URI!), 
+        MongooseModule.forFeature([{ name: BloodRequest.name, schema: BloodRequestSchema }]), 
       ],
       providers: [BloodRequestService], 
     }).compile();

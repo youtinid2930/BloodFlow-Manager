@@ -5,13 +5,19 @@ import { DonorsService } from './donors.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import {Donor,DonorSchema} from './schemas/donor.schema'
 
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+jest.setTimeout(20000);
+
 describe('DonorsController', () => {
   let controller: DonorsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
+        MongooseModule.forRoot(process.env.MONGO_URI!), 
         MongooseModule.forFeature([{ name: Donor.name, schema: DonorSchema }]),
       ],
       controllers: [DonorsController],

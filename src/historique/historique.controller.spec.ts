@@ -4,6 +4,10 @@ import { HistoriqueService } from './historique.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Historique, HistoriqueSchema } from './schemas/historique.schema';
 
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 describe('HistoriqueController', () => {
   let controller: HistoriqueController;
 
@@ -12,7 +16,7 @@ describe('HistoriqueController', () => {
       controllers: [HistoriqueController],
       providers: [HistoriqueService],
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/BloodFlow'), 
+        MongooseModule.forRoot(process.env.MONGO_URI!), 
         MongooseModule.forFeature([{ name: Historique.name, schema: HistoriqueSchema }]),
 
       ],
