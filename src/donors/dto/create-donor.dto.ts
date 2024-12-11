@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString, IsDate,IsEnum } from 'class-validator';
 import {  Transform  } from 'class-transformer';
 
 export class CreateDonorDto {
-   @IsNotEmpty()
+  @IsNotEmpty()
   @IsString()
   name!: string; 
 

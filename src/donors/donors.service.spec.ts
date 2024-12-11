@@ -1,4 +1,3 @@
-import { CreateDonorDto } from './dto/create-donor.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DonorsService } from './donors.service';
 import { MongooseModule } from '@nestjs/mongoose';
