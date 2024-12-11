@@ -39,5 +39,10 @@ export class DonorsController {
   eligibility(@Param('id') id:string){
     return this.donorsService.eligibility_check(id);
   }
+
+  @Get('/eligible/:bloodType')
+  eligible(@Param('bt') bt:string){
+    return this.donorsService.eligible(bt);
+  }
   
 }

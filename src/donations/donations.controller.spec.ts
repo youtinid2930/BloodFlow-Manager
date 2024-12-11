@@ -3,6 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DonationsController } from './donations.controller';
 import { DonationService } from './donations.service';
 import { Donation, DonationSchema } from './schemas/donations.schema';
+import { Donor, DonorSchema } from '../donors/schemas/donor.schema';
+import { DonorsService } from '../donors/donors.service';
 
 import * as dotenv from 'dotenv';
 
@@ -17,10 +19,12 @@ describe('DonationController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(process.env.MONGO_URI!), 
-        MongooseModule.forFeature([{ name: Donation.name, schema: DonationSchema }]),
+        MongooseModule.forFeature([{ name: Donation.name, schema: DonationSchema },
+          { name: Donor.name, schema: DonorSchema }
+        ]),
       ],
       controllers: [DonationsController],
-      providers: [DonationService],
+      providers: [DonationService,DonorsService],
     }).compile();
 
     controller = module.get<DonationsController>(DonationsController);

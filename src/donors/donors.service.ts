@@ -71,6 +71,22 @@ export class DonorsService {
    
 
   }
+  
+  async eligible(bloodType: string): Promise<Donor[]> {
+    const eligibleDonors = await this.donorModel.find({blood_type: bloodType}).exec();
+    const filteredDonors: Donor[] = []; 
+
+    for (const donor of eligibleDonors) {
+
+    const isEligible = await this.eligibility_check(donor._id); 
+    if (isEligible) {
+      filteredDonors.push(donor); 
+    }
+
+    };
+    return filteredDonors;
+
+  }
 
    
 
