@@ -8,5 +8,6 @@ import { Donor, DonorSchema } from './schemas/donor.schema';
   imports: [MongooseModule.forFeature([{ name: Donor.name, schema: DonorSchema }])],
   controllers: [DonorsController],
   providers: [DonorsService],
+  exports: [DonorsService]
 })
 export class DonorsModule {}

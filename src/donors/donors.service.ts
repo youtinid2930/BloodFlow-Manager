@@ -15,11 +15,12 @@ export class DonorsService {
 
   // Create
   async create(createDonorDto: CreateDonorDto): Promise<Donor> {
-      const newDonor = new this.donorModel(createDonorDto);
-      return await newDonor.save();
-    }
+    const newDonor = new this.donorModel(createDonorDto);
+    return await newDonor.save();
+  }
   
   findAll() {
+    console.log('Fetching all donors');
     return this.donorModel.find().exec();
   }
 
@@ -54,4 +55,40 @@ export class DonorsService {
   
     return removedDonor;
   }
+
+  async eligibility_check(id : any): Promise<boolean>{
+  
+    const donneur =await this.donorModel.findById(id).exec();
+    if (!donneur) {
+      throw new Error('Donor n\'existe');
+    }
+    const now = new Date();
+    const ldd= new Date(donneur.last_donation_date);
+    const diffInMs = now.getTime() - ldd.getTime();  //in ms
+    const diffday = diffInMs / (1000*60*60*24); //convert to day
+     
+    return diffday >= 7;
+   
+
+  }
+  
+  async eligible(bloodType: string): Promise<Donor[]> {
+    const eligibleDonors = await this.donorModel.find({blood_type: bloodType}).exec();
+    const filteredDonors: Donor[] = []; 
+
+    for (const donor of eligibleDonors) {
+
+    const isEligible = await this.eligibility_check(donor._id); 
+    if (isEligible) {
+      filteredDonors.push(donor); 
+    }
+
+    };
+    return filteredDonors;
+
+  }
+
+   
+
+
 }

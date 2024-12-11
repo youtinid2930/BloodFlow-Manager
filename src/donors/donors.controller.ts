@@ -17,10 +17,10 @@ export class DonorsController {
     return this.donorsService.findAll();
   }
 
-
   //search by id or name
   @Get(':id')
   findOne(@Param('id') id: string) {
+    
     return this.donorsService.findOne(id);
   }
   
@@ -34,4 +34,15 @@ export class DonorsController {
   remove(@Param('id') id: string) {
     return this.donorsService.remove(id);
   }
+
+  @Get('/eligibility/:id')
+  eligibility(@Param('id') id:string){
+    return this.donorsService.eligibility_check(id);
+  }
+
+  @Get('/eligible/:bloodType')
+  eligible(@Param('bt') bt:string){
+    return this.donorsService.eligible(bt);
+  }
+  
 }
