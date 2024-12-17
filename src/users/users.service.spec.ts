@@ -2,16 +2,21 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as dotenv from 'dotenv';
 import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { HistoriqueService } from 'src/historique/historique.service';
-import { Historique, HistoriqueSchema } from 'src/historique/schemas/historique.schema';
+import { Types } from 'mongoose';
+import { UsersService } from './users.service';
+import { User, UserSchema } from './schemas/users.schema';
+import { DonorsService } from '../donors/donors.service';
+import { Donor, DonorSchema } from '../donors/schemas/donor.schema';
 
 dotenv.config();
 
 jest.setTimeout(100000);
 
-describe('BloodStockService (Integration)', () => {
-  let service: HistoriqueService;
-  
+describe('UsersService (Integration)', () => {
+  let service: UsersService;
+  let donorService: DonorsService;
+  let donorId1: Types.ObjectId;
+  let donorId2: Types.ObjectId;
 
   // Set up MongoDB connection before any tests run
   beforeAll(async () => {
@@ -38,24 +43,131 @@ describe('BloodStockService (Integration)', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(process.env.MONGO_URI!), // Ensure correct DB connection
-        MongooseModule.forFeature([{ name: Historique.name, schema: HistoriqueSchema }]), // Register the BloodStock schema
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema },
+          { name: Donor.name, schema: DonorSchema },
+        ]), // Register the BloodStock schema
       ],
-      providers: [HistoriqueService], // Make sure the service is provided
+      providers: [UsersService, DonorsService], // Make sure the service is provided
     }).compile();
 
-    service = module.get<HistoriqueService>(HistoriqueService); // Get the BloodStockService instance
+    service = module.get<UsersService>(UsersService); // Get the BloodStockService instance
+    donorService = module.get<DonorsService>(DonorsService); // Get the BloodStockServices instance
+
+    // Create a donor to be used in tests
+    const donor1 = await donorService.create({
+      name: 'Test Donor1',
+      blood_type: 'A+',
+      contact_info: '07848737633',
+      date_naiss: new Date('1990-01-01'),
+      last_donation_date: new Date('2024-01-01'),
+    });
+
+    const donor2 = await donorService.create({
+      name: 'Test Donor2',
+      blood_type: 'A-',
+      contact_info: '9348399398',
+      date_naiss: new Date('1990-02-02'),
+      last_donation_date: new Date('2024-02-02'),
+    });
+
+    donorId1 = donor1._id as Types.ObjectId;  //cast
+    donorId2 = donor2._id as Types.ObjectId;
   });
 
-  it('Create a User', () => {
-    // to create a user , in the first time we will set the email and the password, and we will add it also as a donor
-    // because every user in our application is a possible donor, so we will create just the id, and all the other inforamation 
+  it('Create a User', async () => {
+    // to create a user, in the first time we will set the email and the password, and we will add it also as a donor
+    // because every user in our application is a possible donor, so we will create just the id, and all the other information 
     // of donor will be set later.
     // in the order the donor will be created firstly, but with only the id, the required information will be set to null or ""
-    // remeber that this only with the user, and we can update it later, but for other donors the information required should not
+    // remember that this only with the user, and we can update it later, but for other donors the information required should not
     // be null or vide.
+    const createdto = {
+      email: 'med@gmail.com',
+      password: 'securepassword',
+      donor_id: donorId1, // Assign the string _id to donor_id
+    };
 
-    // Create a donor:
-    
+    const result = await service.create(createdto);
+    // Assertions
+    expect(result).toBeDefined();
+    expect(result.email).toEqual('med@gmail.com');
+    expect(result.donor_id).toEqual(donorId1);
     expect(service).toBeDefined();
+  });
+  it('find All users', async () => {
+    const createdto1 = {
+      email: 'med@gmail.com',
+      password: 'securepassword',
+      donor_id: donorId1, // Assign the string _id to donor_id
+    };
+
+    const createdto2 = {
+      email: 'moh@gmail.com',
+      password: 'securepasssjj',
+      donor_id: donorId2, // Assign the string _id to donor_id
+    };
+
+
+    await service.create(createdto1);
+    await service.create(createdto2);
+    
+    const result = await service.findAll();
+
+    expect(result.length).toBe(2);
+    expect(result[0].email).toBe('med@gmail.com');
+    expect(result[1].email).toBe('moh@gmail.com');
+  })
+
+  it('Find user by ID', async () => {
+    const createdto = {
+      email: 'moh@gmail.com',
+      password: 'password123',
+      donor_id: donorId1,
+    };
+
+    const createdUser = await service.create(createdto);
+    const userId = createdUser._id;
+
+    const result = await service.findOne(userId);
+    expect(result).toBeDefined();
+    expect(result?.email).toBe('moh@gmail.com');
+  });
+
+  it('Update a User', async () => {
+    const createdto = {
+      email: 'med@gmail.com',
+      password: 'securepassword',
+      donor_id: donorId2,
+    };
+
+    const createdUser = await service.create(createdto);
+    const userId = createdUser._id;
+
+    const updateUserDto = {
+      email: 'youssef@gmail.com',
+      password: 'newsecurepassword',
+    };
+
+    const updatedUser = await service.update(userId, updateUserDto);
+
+    expect(updatedUser).toBeDefined();
+    expect(updatedUser?.email).toBe('youssef@gmail.com');
+  });
+
+  it('Remove a User', async () => {
+    const createdto = {
+      email: 'med@gmail.com',
+      password: 'password456',
+      donor_id: donorId1,
+    };
+
+    const createdUser = await service.create(createdto);
+    const userId = createdUser._id;
+
+    await service.remove(userId);
+
+    const deletedUser = await service.findOne(userId);
+
+    expect(deletedUser).toBeNull();
   });
 });
