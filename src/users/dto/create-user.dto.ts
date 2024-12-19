@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, MinLength, IsEmpty } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class CreateUserDto {
@@ -9,6 +9,6 @@ export class CreateUserDto {
   @MinLength(6)
   password!: string;
 
-  @IsNotEmpty()
+  @IsEmpty()
   donor_id!: Types.ObjectId;
 }

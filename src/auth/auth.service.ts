@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { LoginDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +9,7 @@ import { UsersService } from '../users/users.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as dotenv from 'dotenv';
+import { CreateDonorDto } from 'src/donors/dto/create-donor.dto';
 
 dotenv.config();
 
@@ -20,25 +21,22 @@ export class AuthService {
     private readonly usersService: UsersService, 
   ) {}
 
-  
-  async signUp(createUserDto: CreateUserDto): Promise<User> {
-    const user = await this.usersService.findOne(createUserDto.email);
-    if (createUserDto.email) {
-      // that's mean that this user has already an account
-      // we need here to return a message that the user already exist.
-      throw new UnauthorizedException("This User email is already exist");
-    }
-    return this.usersService.create(createUserDto);
-  }
 
-  async login(loginDto: { email: string, password: string }): Promise<{ accessToken: string }> {
+  async login(loginDto: LoginDto): Promise<{ accessToken: string }> {
     const { email, password } = loginDto;
+    // search for the user by email
+    // why the email? the email is the unique identifier that simple to manage
     const user = await this.UserModel.findOne({ email }).exec();
-
+    
+    // verfiynig the credetials
+    // here we can more detail, if user exist , if password invalid 
+    // the LoginDto verify that credentials shold not empty
     if (!user || !(await bcrypt.compare(password, user.password))) {
+      // Here: that means the user has no account, so it should contact the admin 
+      // or if he forget the password, then he can edit, by "Forget Password" part
       throw new UnauthorizedException('Invalid credentials');
     }
-
+    
     const payload = { userId: user._id };
     const accessToken = this.generateToken(payload);
     return { accessToken };

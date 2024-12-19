@@ -12,10 +12,6 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @HttpCode(HttpStatus.OK)
-  @Post('signup')
-  async signUp(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.authService.signUp(createUserDto);
-  }
   @Post()
   @Post('login')
   async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
@@ -29,7 +25,7 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  async getProfile(@Req() request: Request): Promise<User> {
+  async getProfile(@Req() request: any): Promise<User> {
     const user = request.user; 
     const validatedUser = await this.authService.validateUser(user.userId);
     

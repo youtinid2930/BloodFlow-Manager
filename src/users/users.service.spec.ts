@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as dotenv from 'dotenv';
 import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Types } from 'mongoose';
 import { UsersService } from './users.service';
 import { User, UserSchema } from './schemas/users.schema';
 import { DonorsService } from '../donors/donors.service';
@@ -15,8 +14,6 @@ jest.setTimeout(100000);
 describe('UsersService (Integration)', () => {
   let service: UsersService;
   let donorService: DonorsService;
-  let donorId1: Types.ObjectId;
-  let donorId2: Types.ObjectId;
 
   // Set up MongoDB connection before any tests run
   beforeAll(async () => {
@@ -52,26 +49,9 @@ describe('UsersService (Integration)', () => {
 
     service = module.get<UsersService>(UsersService); // Get the BloodStockService instance
     donorService = module.get<DonorsService>(DonorsService); // Get the BloodStockServices instance
+    // donor
 
-    // Create a donor to be used in tests
-    const donor1 = await donorService.create({
-      name: 'Test Donor1',
-      blood_type: 'A+',
-      contact_info: '07848737633',
-      date_naiss: new Date('1990-01-01'),
-      last_donation_date: new Date('2024-01-01'),
-    });
-
-    const donor2 = await donorService.create({
-      name: 'Test Donor2',
-      blood_type: 'A-',
-      contact_info: '9348399398',
-      date_naiss: new Date('1990-02-02'),
-      last_donation_date: new Date('2024-02-02'),
-    });
-
-    donorId1 = donor1._id as Types.ObjectId;  //cast
-    donorId2 = donor2._id as Types.ObjectId;
+    
   });
 
   it('Create a User', async () => {
@@ -81,35 +61,55 @@ describe('UsersService (Integration)', () => {
     // in the order the donor will be created firstly, but with only the id, the required information will be set to null or ""
     // remember that this only with the user, and we can update it later, but for other donors the information required should not
     // be null or vide.
+    const donor1 = {
+      name: 'Test Donor1',
+      blood_type: 'A+',
+      contact_info: '07848737633',
+      date_naiss: new Date('1990-01-01'),
+      last_donation_date: new Date('2024-01-01'),
+    };
+
     const createdto = {
       email: 'med@gmail.com',
       password: 'securepassword',
-      donor_id: donorId1, // Assign the string _id to donor_id
     };
 
-    const result = await service.create(createdto);
+    const result = await service.create(createdto, donor1);
     // Assertions
     expect(result).toBeDefined();
     expect(result.email).toEqual('med@gmail.com');
-    expect(result.donor_id).toEqual(donorId1);
     expect(service).toBeDefined();
   });
   it('find All users', async () => {
+    const donor2 = {
+      name: 'Test Donor2',
+      blood_type: 'A-',
+      contact_info: '9348399398',
+      date_naiss: new Date('1990-02-02'),
+      last_donation_date: new Date('2024-02-02'),
+    };
+
+    const donor1 = {
+      name: 'Test Donor1',
+      blood_type: 'A+',
+      contact_info: '07848737633',
+      date_naiss: new Date('1990-01-01'),
+      last_donation_date: new Date('2024-01-01'),
+    };
+
     const createdto1 = {
       email: 'med@gmail.com',
       password: 'securepassword',
-      donor_id: donorId1, // Assign the string _id to donor_id
     };
 
     const createdto2 = {
       email: 'moh@gmail.com',
       password: 'securepasssjj',
-      donor_id: donorId2, // Assign the string _id to donor_id
     };
 
 
-    await service.create(createdto1);
-    await service.create(createdto2);
+    await service.create(createdto1, donor1);
+    await service.create(createdto2, donor2);
     
     const result = await service.findAll();
 
@@ -119,13 +119,20 @@ describe('UsersService (Integration)', () => {
   })
 
   it('Find user by ID', async () => {
+    const donor1 = {
+      name: 'Test Donor1',
+      blood_type: 'A+',
+      contact_info: '07848737633',
+      date_naiss: new Date('1990-01-01'),
+      last_donation_date: new Date('2024-01-01'),
+    };
+
     const createdto = {
       email: 'moh@gmail.com',
       password: 'password123',
-      donor_id: donorId1,
     };
 
-    const createdUser = await service.create(createdto);
+    const createdUser = await service.create(createdto, donor1);
     const userId = createdUser._id;
 
     const result = await service.findOne(userId);
@@ -134,13 +141,21 @@ describe('UsersService (Integration)', () => {
   });
 
   it('Update a User', async () => {
+
+    const donor1 = {
+      name: 'Test Donor1',
+      blood_type: 'A+',
+      contact_info: '07848737633',
+      date_naiss: new Date('1990-01-01'),
+      last_donation_date: new Date('2024-01-01'),
+    };
+
     const createdto = {
       email: 'med@gmail.com',
       password: 'securepassword',
-      donor_id: donorId2,
     };
 
-    const createdUser = await service.create(createdto);
+    const createdUser = await service.create(createdto, donor1);
     const userId = createdUser._id;
 
     const updateUserDto = {
@@ -155,13 +170,20 @@ describe('UsersService (Integration)', () => {
   });
 
   it('Remove a User', async () => {
+    const donor1 = {
+      name: 'Test Donor1',
+      blood_type: 'A+',
+      contact_info: '07848737633',
+      date_naiss: new Date('1990-01-01'),
+      last_donation_date: new Date('2024-01-01'),
+    };
+
     const createdto = {
       email: 'med@gmail.com',
       password: 'password456',
-      donor_id: donorId1,
     };
 
-    const createdUser = await service.create(createdto);
+    const createdUser = await service.create(createdto, donor1);
     const userId = createdUser._id;
 
     await service.remove(userId);
