@@ -16,7 +16,7 @@ jest.setTimeout(100000);
 
 describe('DonationsService', () => {
   let service: DonationService;
-  let donorService: DonorsService; // Inject DonorsService
+  let donorService: DonorsService; 
   let donorId: Types.ObjectId;
 
   beforeAll(async () => {
