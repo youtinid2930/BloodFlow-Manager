@@ -14,6 +14,9 @@ export class Donor extends Document {
   @Prop({ required: true })
   blood_type!: string; 
 
+  @Prop({ required: false })
+  email!: string;
+
   @Prop({ required: true })
   contact_info!: string;
 

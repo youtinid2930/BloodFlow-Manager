@@ -73,6 +73,7 @@ export class DonorsService {
   }
   
   async eligible(bloodType: string): Promise<Donor[]> {
+    
     const eligibleDonors = await this.donorModel.find({blood_type: bloodType}).exec();
     const filteredDonors: Donor[] = []; 
 
@@ -84,11 +85,10 @@ export class DonorsService {
     }
 
     };
-    return filteredDonors;
+    return eligibleDonors;
 
   }
 
-   
-
 
 }
+

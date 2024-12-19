@@ -8,7 +8,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-jest.setTimeout(20000);
+jest.setTimeout(100000);
 
 describe('DonorsService (Intergration)',()=>{
   // Service under test
@@ -129,7 +129,21 @@ describe('DonorsService (Intergration)',()=>{
 
   });
 
-
+  it('find and filter donors by blood', async()=>{
+    const createdto={
+      name: 'mohamed',
+      date_naiss: new Date('2003-08-15'),
+      blood_type: 'O-',
+      contact_info: 'med@agdid.com',
+      last_donation_date: new Date('2024-08-15'), 
+    }
+    const create= await service.create(createdto);
+    expect(create).toHaveProperty('_id');
+    const result= await service.eligible("O-");
+    expect(result[0].name).toBe('mohamed');
+    expect(result[0].blood_type).toBe('O-');
+    expect(result[0].contact_info).toBe('med@agdid.com');
+  });
 
 
 

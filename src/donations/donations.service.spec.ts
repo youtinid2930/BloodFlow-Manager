@@ -11,17 +11,12 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-jest.setTimeout(20000);
+jest.setTimeout(100000);
 
-import * as dotenv from 'dotenv';
-
-dotenv.config();
-
-jest.setTimeout(20000);
 
 describe('DonationsService', () => {
   let service: DonationService;
-  let donorService: DonorsService; // Inject DonorsService
+  let donorService: DonorsService; 
   let donorId: Types.ObjectId;
 
   beforeAll(async () => {

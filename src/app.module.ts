@@ -6,6 +6,8 @@ import { DonorsModule } from './donors/donors.module';
 import { BloodRequestModule } from './blood-requests/blood-requests.module';
 import { DonationsModule } from './donations/donations.module';
 import { BloodStockModule } from './blood_stock/blood_stock.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -17,6 +19,8 @@ dotenv.config();
     DonationsModule,
     BloodStockModule,
     BloodRequestModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

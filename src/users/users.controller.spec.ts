@@ -1,9 +1,9 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { DonorsController } from './donors.controller';
-import { DonorsService } from './donors.service';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import {Donor,DonorSchema} from './schemas/donor.schema'
+import {User,UserSchema} from './schemas/users.schema'
 
 import * as dotenv from 'dotenv';
 
@@ -11,20 +11,20 @@ dotenv.config();
 
 jest.setTimeout(100000);
 
-describe('DonorsController', () => {
-  let controller: DonorsController;
+describe('UsersController', () => {
+  let controller: UsersController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(process.env.MONGO_URI!), 
-        MongooseModule.forFeature([{ name: Donor.name, schema: DonorSchema }]),
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
       ],
-      controllers: [DonorsController],
-      providers: [DonorsService],
+      controllers: [UsersController],
+      providers: [UsersService],
     }).compile();
 
-    controller = module.get<DonorsController>(DonorsController);
+    controller = module.get<UsersController>(UsersController);
   });
   
 
@@ -32,3 +32,4 @@ describe('DonorsController', () => {
     expect(controller).toBeDefined();
   });
 });
+

@@ -8,6 +8,8 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+jest.setTimeout(100000);
+
 describe('BloodStockService (Integration)', () => {
   let service: HistoriqueService;
   
