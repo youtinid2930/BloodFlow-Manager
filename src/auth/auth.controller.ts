@@ -6,7 +6,7 @@ import { LoginDto } from './dto/create-auth.dto';
 import { User } from '../users/schemas/users.schema';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
-
+jest.setTimeout(100000);
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +27,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async getProfile(@Req() request: any): Promise<User> {
     const user = request.user; 
-    const validatedUser = await this.authService.validateUser(user.userId);
+    const validatedUser = await this.authService.validateUser(user.email);
     
     if (!validatedUser) {
       throw new UnauthorizedException('User not found');

@@ -50,9 +50,13 @@ export class AuthService {
     return jwt.sign(payload, secret, { expiresIn: '1h' });
   }
   
-  async validateUser(id: string): Promise<User | null> {
-    return this.usersService.findOneById(id); 
+  async validateUser(email: string): Promise<User | null> {
+    console.log(email);
+    const user = await this.UserModel.findOne({ email });
+    console.log(user+" validate");
+    return user;
   }
+  
 
   async verifyToken(token: string): Promise<boolean> {
     try {
