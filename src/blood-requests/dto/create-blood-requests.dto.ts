@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsDate, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsDate, IsEnum,IsBoolean } from 'class-validator';
 import {  Transform  } from 'class-transformer';
 
 
@@ -28,4 +28,8 @@ export class CreateRequestDto {
   @IsNotEmpty()
   @IsString()
   contact_info!: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  urgent!: boolean; 
 }

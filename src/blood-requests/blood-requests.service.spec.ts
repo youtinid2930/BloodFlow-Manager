@@ -53,6 +53,7 @@ describe('RequestsService', () => {
       status: "pending",
       request_date: new Date('2024-12-01'),
       contact_info : "0684938838",
+      urgent: true,
     };
 
     const resutl = await service.create(createDto);
@@ -69,6 +70,7 @@ describe('RequestsService', () => {
       status: "pending",
       request_date: new Date('2024-12-01'),
       contact_info : "0684938838",
+      urgent: true,
     };
 
     const createDto2 = {
@@ -78,6 +80,7 @@ describe('RequestsService', () => {
       status: "pending",
       request_date: new Date('2024-12-01'),
       contact_info : "067438388",
+      urgent: true,
     };
 
     await service.create(createDto1);
@@ -98,6 +101,7 @@ describe('RequestsService', () => {
       status: "pending",
       request_date: new Date('2024-12-01'),
       contact_info : "0684938838",
+      urgent: true,
     };
     const created = await service.create(createDto);
 
@@ -120,6 +124,7 @@ describe('RequestsService', () => {
       status: "pending",
       request_date: new Date('2024-12-01'),
       contact_info : "0684938838",
+      urgent: true,
     };
 
     const created = await service.create(createDto);

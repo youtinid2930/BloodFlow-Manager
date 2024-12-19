@@ -125,4 +125,6 @@ describe('BloodStockService (Integration)', () => {
     const all = await service.findAll();
     expect(all.length).toBe(0);
   });
+
+ 
 });

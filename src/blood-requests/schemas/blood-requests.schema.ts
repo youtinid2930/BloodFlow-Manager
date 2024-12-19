@@ -20,6 +20,9 @@ export class BloodRequest extends Document {
 
   @Prop({ required: true })
   contact_info!: string;
+
+  @Prop({ required: true, default: false })
+  urgent!: boolean; 
 }
 
 export const BloodRequestSchema = SchemaFactory.createForClass(BloodRequest);
