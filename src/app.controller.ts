@@ -5,6 +5,11 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get('/')
+  getHome(): string {
+    return 'Welcome to the BloodFlow Manager API!';
+  }
+
   @Get('hello')
   getHello(): string {
     return this.appService.getHello();
