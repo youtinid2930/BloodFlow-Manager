@@ -5,8 +5,8 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/create-auth.dto';
 import { User } from '../users/schemas/users.schema';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { GoogleAuthGuard } from './guards/Guard';
 
-jest.setTimeout(100000);
 
 @Controller('auth')
 export class AuthController {
@@ -34,5 +34,17 @@ export class AuthController {
     }
   
     return validatedUser;
+  }
+
+  @Get('google/login')
+  @UseGuards(GoogleAuthGuard)
+  handleLogin() {
+    return { msg: "Google Authentication" };
+  }
+
+  @Get('google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  handleRedirect() {
+    return {msg: "OK"};
   }
 }
