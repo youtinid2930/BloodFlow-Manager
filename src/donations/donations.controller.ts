@@ -34,4 +34,10 @@ export class DonationsController {
   remove(@Param('id') id: string) {
     return this.donationsService.remove(id);
   }
+
+  @Get('get/nbreDonationsById')
+  async nbreDonationsForId():Promise<Record<string,number>>{
+   return this.donationsService.nbreDonationsById();
+
+  }
 }

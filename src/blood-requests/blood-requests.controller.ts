@@ -31,4 +31,9 @@ export class BloodRequestController {
   remove(@Param('id') id: string) {
     return this.requestsService.remove(+id);
   }
+
+  @Post('request/match-requests')
+  matchRequestsWithStock() {
+    return this.requestsService.matchRequestWithStock();
+  }
 }

@@ -6,7 +6,7 @@ import { LoginDto } from './dto/create-auth.dto';
 import { User } from '../users/schemas/users.schema';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
-jest.setTimeout(100000);
+// jest.setTimeout(100000);
 
 @Controller('auth')
 export class AuthController {

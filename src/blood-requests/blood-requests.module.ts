@@ -4,7 +4,7 @@ import { BloodRequest, BloodRequestSchema } from './schemas/blood-requests.schem
 import { BloodRequestService } from './blood-requests.service';
 import { BloodRequestController } from './blood-requests.controller';
 import { BloodStockService } from '../blood_stock/blood_stock.service';
-import { EmailService } from '../email/email.service';
+
 import { BloodStockModule } from '../blood_stock/blood_stock.module';
 
 @Module({
@@ -13,7 +13,7 @@ import { BloodStockModule } from '../blood_stock/blood_stock.module';
     BloodStockModule, // Import BloodStockModule to access the BloodStockService
   ],
   controllers: [BloodRequestController],
-  providers: [BloodRequestService, BloodStockService, EmailService],
+  providers: [BloodRequestService, BloodStockService],
   exports: [BloodRequestService, MongooseModule],
 })
 export class BloodRequestModule {}

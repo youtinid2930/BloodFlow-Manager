@@ -89,6 +89,46 @@ export class DonorsService {
 
   }
 
+  async donorsByType(): Promise<Record<string, number>> {
+
+    try {
+      const result = await this.donorModel.aggregate([
+        {
+          $group: {
+            _id: '$blood_type', 
+            count: { $sum: 1 }, 
+          },
+        },
+      ]);
+  
+      const groupedDonors: Record<string, number> = {};
+      result.forEach((item) => {
+        groupedDonors[item._id] = item.count;
+      });
+  
+      return groupedDonors;
+    } catch (error) {
+      throw new Error(`Erreur lors de la récupération des donneurs par type : ${error}`);
+    }
+  }
+  
+  async getDonorByType(type: string): Promise<Donor[]> {
+    try {
+      const donors = await this.donorModel.find({ blood_type: { $eq: type } }).exec();
+      return donors;
+    } catch (error) {
+      console.error('Error fetching donors by type:', error);
+      throw new Error('Unable to fetch donors by type');
+    }
+  }
+  
+  
+     // async 
+  
+      //async notifyNeedDonors()
+  
+   
+
 
 }
 
