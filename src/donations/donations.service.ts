@@ -83,4 +83,25 @@ export class DonationService {
   
     return removedDonation;
   }
+
+  async nbreDonationsById(): Promise<Record<string, number>>{
+    try{   
+      const result=await this.DonationModel.aggregate([{
+        $group:{
+          _id:'$donor_id',
+          count: { $sum: 1 }, 
+        },
+  
+      }]);
+      const groupedDonors: Record<string, number> = {};
+       result.forEach((item:any) => {
+        groupedDonors[item._id] = item.count;
+      });
+    
+    return groupedDonors;
+  } catch (error: any) {
+       throw new Error(`Erreur ${error}`);
+  }
+  
+  }
 }

@@ -5,7 +5,7 @@ import {Types} from 'mongoose';
 import { BloodStock } from './schemas/blood_stock.schema';
 import { CreateBloodStockDto } from './dto/create-blood_stock.dto';
 import { UpdateBloodStockDto } from './dto/update-blood_stock.dto';
-import { EmailService } from '../email/email.service';
+
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,10 +14,32 @@ dotenv.config();
 export class BloodStockService {
   constructor(
     @InjectModel(BloodStock.name) private readonly bloodStockModel: Model<BloodStock>,
-    private readonly emailService: EmailService,
+    
   ) {}
 
   async create(createBloodStockDto: CreateBloodStockDto): Promise<BloodStock> {
+    const { blood_type, storage_location, quantity, expiry_date ,last_update} = createBloodStockDto;
+  
+    // Check if a blood stock with the same blood type and storage location exists
+    const existingBloodStock = await this.bloodStockModel.findOne({ 
+      blood_type, 
+      storage_location 
+    });
+  
+    if (existingBloodStock) {
+      // Update the existing record
+      existingBloodStock.quantity += quantity;
+      existingBloodStock.expiry_date = expiry_date;
+      existingBloodStock.last_update = last_update;
+  
+      const updatedBloodStock = await existingBloodStock.save();
+      if (!updatedBloodStock) {
+        throw new Error('Failed to update blood stock');
+      }
+      return updatedBloodStock;
+    }
+  
+    // Create a new blood stock if no match is found
     const createdBloodStock = new this.bloodStockModel(createBloodStockDto);
     const savedBloodStock = await createdBloodStock.save();
     if (!savedBloodStock) {
@@ -25,6 +47,7 @@ export class BloodStockService {
     }
     return savedBloodStock;
   }
+  
 
   findAll() {
     return this.bloodStockModel.find().exec();
@@ -88,20 +111,24 @@ export class BloodStockService {
   async findExpired(): Promise<BloodStock[]> {
     const currentDate = new Date();
     return this.bloodStockModel.find({ expiry_date: { $lt: currentDate } }).exec();
+
+    //send notification for expired song
   }
 
 
   async getAvailableStock(blood_type: string, storage_location: string): Promise<BloodStock | null> {
+    
     return this.bloodStockModel.findOne({ blood_type, storage_location, quantity: { $gt: 0 } });
 
   }
 
 
   async getStocksByBloodType_etQTE(bloodType: string, qte: number): Promise<BloodStock[]> {
-    
-    const filter: any = { blood_type: { $eq : bloodType}, quantity: { $gt: qte }};
-    // return this.bloodStockModel.find(filter).sort({ expiry_date: 1 }).exec();
-    const resulat = await this.bloodStockModel.find(filter).exec();
+    const currentDate = new Date();
+    const resulat = await this.bloodStockModel.find({ blood_type: { $eq : bloodType}, quantity: { $gte: qte }, expiry_date: { $gte: currentDate }}).sort({ expiry_date: 1 }).exec();
+    if (resulat.length === 0) {
+      return [];
+    }
     return resulat;
   
   }
@@ -165,15 +192,15 @@ export class BloodStockService {
       expiredStocks.forEach(stock => {
         message += `${stock.blood_type} at ${stock.storage_location}, expired on ${stock.expiry_date}\n`;
       });
-      await this.emailService.sendEmail(
-        'Testfste@gmail.com',  //admin
-        'ALERT: Expired Blood Stocks',
-        message
-      );
+      // await this.emailService.sendEmail(
+      //   'Testfste@gmail.com',  //admin
+      //   'ALERT: Expired Blood Stocks',
+      //   message
+      // );
     }
   }
 
-  async getStockSummaryByBloodType() {
+  async getSommeByBloodType() {
     const aggregate = [
       { $group: { _id: '$blood_type', totalQuantity: { $sum: '$quantity' } } },
     ];

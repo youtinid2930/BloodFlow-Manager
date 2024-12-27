@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,Query } from '@nestjs/common';
 import { DonorsService } from './donors.service';
 import { CreateDonorDto } from './dto/create-donor.dto';
 import { UpdateDonorDto } from './dto/update-donor.dto';
@@ -35,14 +35,24 @@ export class DonorsController {
     return this.donorsService.remove(id);
   }
 
-  @Get('/eligibility/:id')
+  @Get('eligibility/:id')
   eligibility(@Param('id') id:string){
     return this.donorsService.eligibility_check(id);
   }
 
-  @Get('/eligible/:bloodType')
+  @Get('eligible/:bloodType')
   eligible(@Param('bt') bt:string){
     return this.donorsService.eligible(bt);
   }
   
+  @Get('getdonors/by-types')
+   async groupe_by_type(){
+    return await this.donorsService.donorsByType();
+   }
+
+  @Get('getdonors/with')
+     async getByType(@Query('type')type:string) {
+      return await this.donorsService.getDonorByType(type);
+
+     }
 }

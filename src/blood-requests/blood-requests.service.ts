@@ -5,7 +5,6 @@ import { Model, Types } from 'mongoose';
 import { BloodRequest } from './schemas/blood-requests.schema';
 import { UpdateRequestDto } from './dto/update-blood-requests.dto';
 import { BloodStockService } from '../blood_stock/blood_stock.service';
-import { EmailService } from '../email/email.service';
 import { elementAt } from 'rxjs';
 
 @Injectable()
@@ -13,7 +12,6 @@ export class BloodRequestService {
   constructor(
     @InjectModel(BloodRequest.name) private RequestModel: Model<BloodRequest>,
     private readonly bloodStockService: BloodStockService,
-    private readonly emailService: EmailService,
   ) {}
 
   async create(createRequestDto: CreateRequestDto): Promise<BloodRequest> {
@@ -65,77 +63,58 @@ export class BloodRequestService {
   }
 
 
-  // Automatically match request with available stock and prioritize urgent ones
   async matchRequestWithStock() {
-
     try {
-    const alldemondes = await this.RequestModel.find().exec();
-    const urgentdemondes = alldemondes.filter(demonde => demonde.urgent === true);
-    const regulardemondes= alldemondes.filter(demonde => demonde.urgent !== true);
-
-    //hundle urgent request
-    for (const urdemonde of urgentdemondes) {
-
-      try {
-      const availableStock = await this.bloodStockService.getStocksByBloodType_etQTE(urdemonde.blood_type,urdemonde.quantity);
+      // Fetch requests with status 'pending' or 'denied'
+      const alldemondes = await this.RequestModel.find({
+        status: { $in: ['pending', 'denied'] }
+      }).exec();
+  
+      // Separate requests into urgent and regular
+      const urgentdemondes = alldemondes.filter(demonde => demonde.urgent === true);
+      const regulardemondes = alldemondes.filter(demonde => demonde.urgent !== true);
+  
+      // Process urgent requests
+      await this.processRequests(urgentdemondes, 'urgent');
+  
+      // Process regular requests
+      await this.processRequests(regulardemondes, 'regular');
       
-      
-        if (availableStock) {
-          for (const element of availableStock) {
-          const location = element.storage_location;
-          await this.RepondreRequest_updateStock(urdemonde, availableStock, 'reponded',location);
-        }
-      }
-        else {
-          await this.update(urdemonde.id, { status: 'Denied' });
-          // await this.sendNotification(request, 'Denied');
-        }
-      
-
-      }
-    
-    catch(error){
-      console.error(`Error handling urgent request ID ${urdemonde.id}:`, error);
-
+    } catch (error) {
+      console.error("Error processing requests:", error);
+      throw new Error("Failed to process requests.");
     }
-
   }
   
+  // Helper function to process each request (both urgent and regular)
+  async processRequests(requests : BloodRequest[], type: string) {
+    for (const request of requests) {
+      try {
+        const availableStock = await this.bloodStockService.getStocksByBloodType_etQTE(request.blood_type, request.quantity);
+  
+        if (availableStock && availableStock.length > 0) {
+          // Respond to the request if stock is available
+          for (const stock of availableStock) {
+            const location = stock.storage_location;
+            await this.RepondreRequest_updateStock(request, availableStock, 'responded', location);
+          }
+        } else {
+          // Deny the request if no stock is available
+          await this.update(request.id, { status: 'denied' });
+          //send notification that this stock is low
 
-    // Handle regular requests
-    for (const regurdemonde of regulardemondes) {
 
-      try{
-      const availableStock = await this.bloodStockService.getStocksByBloodType_etQTE(regurdemonde.blood_type,regurdemonde.quantity);
-      if (availableStock.length > 0) {
-        
-        for (const element of availableStock) {
-        const location = element.storage_location;
-        await this.RepondreRequest_updateStock(regurdemonde, availableStock, 'reponded',location);
+
+
+          ///
+          console.log(`${type} request ID ${request.id} denied due to insufficient stock.`);
+          // You can add a notification here if needed
+        }
+      } catch (error) {
+        console.error(`Error handling ${type} request ID ${request.id}:`, error);
       }
     }
-      else {
-        await this.update(regurdemonde.id, { status: 'Denied' });
-        // await this.sendNotification(regularRequest, 'Denied');
-      }
-      
-    
   }
-    catch (error){
-        console.error(`Error handling regular request ID ${regurdemonde.id}:`, error);
-    }
-    
-    }
-  }
-  catch (error) {
-    console.error("Error recuperation requests:", error);
-    throw new Error("Failed to process requests.");
-  }
-
-  }
-
-
-
-
+  
 
 }

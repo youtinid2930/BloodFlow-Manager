@@ -34,7 +34,7 @@ export class BloodStockController {
       return await this.bloodStockService.findOne(id);
     } catch (error) {
       console.error('Error fetching blood stock by id:', error);
-      throw new Error(`Failed to fetch blood stock one ${id}`);
+      throw new Error(`Failed to fetch blood stock with ID ${id}`);
     }
   }
 
@@ -45,7 +45,7 @@ export class BloodStockController {
       throw new Error('Invalid ObjectId');
     }
     try {
-      return await this.bloodStockService.update(new mongoose.Types.ObjectId(id), updateBloodStockDto);
+      return await this.bloodStockService.update(id, updateBloodStockDto);
     } catch (error) {
       console.error('Error updating blood stock:', error);
       throw new Error('Failed to update blood stock');
@@ -59,58 +59,24 @@ export class BloodStockController {
       throw new Error('Invalid ObjectId');
     }
     try {
-      return await this.bloodStockService.remove(new mongoose.Types.ObjectId(id));
+      return await this.bloodStockService.remove(id);
     } catch (error) {
       console.error('Error deleting blood stock:', error);
       throw new Error('Failed to delete blood stock');
     }
   }
 
-  @Patch('update/quantity')
-  async updateQuantity(
-    @Body('blood_type') blood_type: string,
-    @Body('quantity') quantity: number,
-    @Body('storage_location') storage_location : string
-   
-  ) {
-    try {
-      const updatedStock = await this.bloodStockService.UpdateQuantity(blood_type, quantity,storage_location);
-      return { message: 'Quantity updated successfully', updatedStock };
-    } catch (error) {
-      console.error(`${blood_type} ${quantity} ${storage_location}`);
-      throw new Error(`${blood_type} ${quantity} ${storage_location}`);
-    }
-  }
-
-
-
-  // 1 unit is the low ok!!
-  // 1 unit of blood is 500 mL
   @Get('find&notify/low-stock')
   async findLowStock() {
     try {
-    
       return await this.bloodStockService.findLowStock();
     } catch (error) {
-       console.error('Error fetching low stock:', error);
-      
-      throw new Error('Error fetching low stock');
+      console.error('Error fetching low stock:', error);
+      throw new Error('Failed to fetch low stock');
     }
   }
 
-
-  // @Get('notify-low-stock')
-  // async notifyLowStock(@Query('seuil') seuil: number) {
-  //   try {
-  //     return await this.bloodStockService.notifyLowStock(seuil);
-  //   } catch (error) {
-  //     console.error('Error notifying about low stock:', error);
-  //     throw new Error('Failed to notify low stock');
-  //   }
-  // }
-  
-
-  @Get('expired')
+  @Get('stock/expired')
   async findExpired() {
     try {
       return await this.bloodStockService.findExpired();
@@ -120,7 +86,7 @@ export class BloodStockController {
     }
   }
 
-  @Post('search')
+  @Get('stock/search')
   async searchStocks(
     @Body('blood_type') blood_type?: string,
     @Body('storage_location') storage_location?: string,
@@ -128,12 +94,7 @@ export class BloodStockController {
     @Body('max_quantity') max_quantity?: number,
   ) {
     try {
-      return await this.bloodStockService.searchStocks(
-        blood_type,
-        storage_location,
-        min_quantity,
-        max_quantity,
-      );
+      return await this.bloodStockService.searchStocks(blood_type,storage_location,min_quantity,max_quantity);
     } catch (error) {
       console.error('Error searching stocks:', error);
       throw new Error('Failed to search stocks');
@@ -141,17 +102,14 @@ export class BloodStockController {
   }
 
   @Get('get/getStockByType-Qte/:bloodType/:qte')
-  async getStocksByBloodType(@Param('bloodType') bloodType: string,@Param('qte') qte: number) {
+  async getStocksByBloodType(@Param('bloodType') bloodType: string, @Param('qte') qte: number) {
     try {
-      // const quantity = parseInt(qte, 10);
-      return await this.bloodStockService.getStocksByBloodType_etQTE(bloodType,qte);
+      return await this.bloodStockService.getStocksByBloodType_etQTE(bloodType, qte);
     } catch (error) {
       console.error('Error fetching stocks by blood type:', error);
-      throw new Error('Failed to fetch stocks by blood type');
+      throw new Error(`${bloodType},${qte}`);
     }
   }
-
-  
 
   @Get('notify-expired-stock')
   async notifyExpiredStock() {
@@ -163,10 +121,10 @@ export class BloodStockController {
     }
   }
 
-  @Get('stock-summary-by-blood-type')
+  @Get('stock/sommeby-blood')
   async getStockSummaryByBloodType() {
     try {
-      return await this.bloodStockService.getStockSummaryByBloodType();
+      return await this.bloodStockService.getSommeByBloodType();
     } catch (error) {
       console.error('Error fetching stock summary by blood type:', error);
       throw new Error('Failed to fetch stock summary');
