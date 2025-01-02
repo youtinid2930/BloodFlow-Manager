@@ -1,5 +1,6 @@
-import { IsEmail, IsNotEmpty, MinLength, IsEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, MinLength, IsEmpty, IsEnum } from 'class-validator';
 import { Types } from 'mongoose';
+import { Role } from '../../roles/enum/role.enum';
 
 export class CreateUserDto {
   @IsEmail()
@@ -11,4 +12,7 @@ export class CreateUserDto {
 
   @IsEmpty()
   donor_id!: Types.ObjectId;
+
+  @IsEnum(Role)
+  role!: Role;
 }

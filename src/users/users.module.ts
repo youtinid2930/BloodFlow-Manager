@@ -4,11 +4,14 @@ import { UsersController } from './users.controller';
 import { DonorsModule } from '../donors/donors.module'; // Import DonorsModule
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/users.schema';
+import { JwtModule } from '@nestjs/jwt';
+
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    DonorsModule, 
+    DonorsModule,
+    JwtModule, 
   ],
   controllers: [UsersController],
   providers: [UsersService],

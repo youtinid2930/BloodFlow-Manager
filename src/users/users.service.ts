@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { User } from './schemas/users.schema';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateDonorDto } from '../donors/dto/create-donor.dto';
@@ -47,6 +48,7 @@ export class UsersService {
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(password, salt);
   }
+
   
   // 2...
   async findAll(): Promise<User[]> {
@@ -55,7 +57,8 @@ export class UsersService {
 
   // 3...
 
-  async findOne(id: any): Promise<User | null> {
+  async findOne(id: ObjectId){
+    console.log("the id inside findOne is ", id);
     return this.UserModel.findById(id).exec();
   }
 
@@ -88,5 +91,16 @@ export class UsersService {
   // 6...
   async remove(id: any): Promise<void> {
     await this.UserModel.findByIdAndDelete(id).exec();
+  }
+
+  // 7...
+  async updateUserRefreshTocken (userId: ObjectId, hashedRefreshToken: string) {
+    const updatedUser = await this.UserModel.findByIdAndUpdate(userId).exec();
+
+    if (!updatedUser) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+    updatedUser.refreshToken = hashedRefreshToken;
+    return updatedUser.save();
   }
 }
