@@ -66,7 +66,7 @@ export class BloodStockController {
     }
   }
 
-  @Get('find&notify/low-stock')
+  @Get('find/low-stock')
   async findLowStock() {
     try {
       return await this.bloodStockService.findLowStock();
@@ -75,6 +75,29 @@ export class BloodStockController {
       throw new Error('Failed to fetch low stock');
     }
   }
+
+
+  @Get('notify/low-stock')  
+  async notifyLowStock(): Promise<string> {
+    try {
+      await this.bloodStockService.notifyLowStock();  // Call the service method
+      return 'Low stock notification sent successfully.';
+    } catch (error) {
+      console.error(error);
+      return 'Failed to send low stock notification.';
+    }
+  }
+
+  @Get('find&Notify/low-stock')  
+  async findAndNotifyLowStock(){
+    try {
+      return await this.bloodStockService.findAndNotifyLowStock();
+    } catch (error) {
+      console.error(error);
+      return 'Failed to send low stock notification.';
+    }
+  }
+
 
   @Get('stock/expired')
   async findExpired() {
@@ -111,15 +134,6 @@ export class BloodStockController {
     }
   }
 
-  @Get('notify-expired-stock')
-  async notifyExpiredStock() {
-    try {
-      return await this.bloodStockService.notifyExpiredStock();
-    } catch (error) {
-      console.error('Error notifying about expired stock:', error);
-      throw new Error('Failed to notify expired stock');
-    }
-  }
 
   @Get('stock/sommeby-blood')
   async getStockSummaryByBloodType() {
@@ -157,4 +171,9 @@ export class BloodStockController {
       throw new Error('Failed to fetch stocks near expiry');
     }
   }
+
+  ///greatest one
+
+
+
 }

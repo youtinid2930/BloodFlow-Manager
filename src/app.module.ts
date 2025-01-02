@@ -8,6 +8,8 @@ import { DonationsModule } from './donations/donations.module';
 import { BloodStockModule } from './blood_stock/blood_stock.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import { EmailModule } from './mail/mail.module';
 import * as dotenv from 'dotenv';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesModule } from './roles/roles.module';
@@ -19,6 +21,7 @@ dotenv.config();
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_URI!),
     ConfigModule.forRoot({
       load: [jwtConfig], // Ensure the jwt configuration is loaded here
@@ -30,6 +33,7 @@ dotenv.config();
     BloodRequestModule,
     AuthModule,
     UsersModule,
+    EmailModule
     RolesModule,
   ],
   controllers: [AppController],

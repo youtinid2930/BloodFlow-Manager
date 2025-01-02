@@ -3,10 +3,14 @@ import { BloodStockService } from './blood_stock.service';
 import { BloodStockController } from './blood_stock.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BloodStockSchema, BloodStock } from './schemas/blood_stock.schema';
+import { EmailModule } from '../mail/mail.module'; 
+import { DonorsModule } from '../donors/donors.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: BloodStock.name, schema: BloodStockSchema }]),
+    EmailModule,
+    DonorsModule
   ],
   controllers: [BloodStockController],
   providers: [BloodStockService],
