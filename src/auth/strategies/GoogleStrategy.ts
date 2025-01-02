@@ -26,7 +26,7 @@ export class GoogleSrategy extends PassportStrategy(Strategy) {
         if (profile.emails && profile.emails.length > 0) {
           const email = profile.emails[0].value;
           console.log(email);
-          return await this.authService.validateUser(email);
+          return await this.authService.validateByEmail(email);
         } else {
           throw new Error('Email not found in profile');
         }

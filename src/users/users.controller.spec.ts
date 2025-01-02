@@ -1,10 +1,9 @@
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import {User,UserSchema} from './schemas/users.schema'
-
+import { User, UserSchema } from './schemas/users.schema';
+import { DonorsModule } from '../donors/donors.module'; // Import DonorsModule
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -19,6 +18,7 @@ describe('UsersController', () => {
       imports: [
         MongooseModule.forRoot(process.env.MONGO_URI!), 
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+        DonorsModule, // Add DonorsModule to the imports
       ],
       controllers: [UsersController],
       providers: [UsersService],
@@ -26,10 +26,8 @@ describe('UsersController', () => {
 
     controller = module.get<UsersController>(UsersController);
   });
-  
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 });
-
