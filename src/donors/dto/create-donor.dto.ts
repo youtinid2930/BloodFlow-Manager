@@ -14,7 +14,7 @@ export class CreateDonorDto {
   
 
   @IsNotEmpty()
-  @IsEnum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], { message: 'Invalid' })
+  @IsEnum(["Ap", "Am", "Bp", "Bm", "ABp", "ABm", "Op", "Om"], { message: 'Invalid BloodType' })
   blood_type!: string; 
 
   @IsNotEmpty()
