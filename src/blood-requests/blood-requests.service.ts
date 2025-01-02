@@ -5,13 +5,14 @@ import { Model, Types } from 'mongoose';
 import { BloodRequest } from './schemas/blood-requests.schema';
 import { UpdateRequestDto } from './dto/update-blood-requests.dto';
 import { BloodStockService } from '../blood_stock/blood_stock.service';
-import { elementAt } from 'rxjs';
+import { EmailService } from '../mail/mailer.service';
 
 @Injectable()
 export class BloodRequestService {
   constructor(
     @InjectModel(BloodRequest.name) private RequestModel: Model<BloodRequest>,
     private readonly bloodStockService: BloodStockService,
+    private readonly emailservice : EmailService,
   ) {}
 
   async create(createRequestDto: CreateRequestDto): Promise<BloodRequest> {

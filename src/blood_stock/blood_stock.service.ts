@@ -5,8 +5,10 @@ import {Types} from 'mongoose';
 import { BloodStock } from './schemas/blood_stock.schema';
 import { CreateBloodStockDto } from './dto/create-blood_stock.dto';
 import { UpdateBloodStockDto } from './dto/update-blood_stock.dto';
-
+import { EmailService } from '../mail/mailer.service';
+import { DonorsService } from '../donors/donors.service';
 import * as dotenv from 'dotenv';
+
 
 dotenv.config();
 
@@ -14,6 +16,8 @@ dotenv.config();
 export class BloodStockService {
   constructor(
     @InjectModel(BloodStock.name) private readonly bloodStockModel: Model<BloodStock>,
+    private readonly emailService: EmailService,
+    private readonly donorsService: DonorsService,
     
   ) {}
 
@@ -96,24 +100,69 @@ export class BloodStockService {
       let message = '';
 
       console.log(`${emailRecipients} + ${lowStockItems}`)
-      // for (const item of lowStockItems) {
-      //   message += `${item.blood_type} in low stock!\n`;
-      // }
+      for (const item of lowStockItems) {
+        message += `${item.blood_type} in low stock!\n`;
+      }
 
-      // await this.emailService.sendEmail(
-      //   emailRecipients,
-      //   'ALERT: Low Blood Stock',
-      //   message,
-      // );
+      await this.emailService.sendMail(
+        emailRecipients,
+        'ALERT: Low Blood Stock',
+        message,
+      );
+      
     }
   }
 
+  async findAndNotifyLowStock(): Promise<BloodStock[]> {
+    // Find items with low stock (quantity less than 500)
+    const lowStockItems = await this.bloodStockModel.find({ quantity: { $lt: 500 } }).exec();
+    
+    // If there are low stock items, send an alert
+    if (lowStockItems.length > 0) {
+      const emailRecipients = process.env.ADMIN_MAIL as string; // admins
+      let message = '';
+  
+      // Build the message with blood types in low stock
+      for (const item of lowStockItems) {
+        message += `${item.blood_type} in low stock!\n`;
+      }
+  
+      // Send the email notification
+      await this.emailService.sendMail(
+        emailRecipients,
+        'ALERT: Low Blood Stock',
+        message,
+      );
+    }
+  
+    // Return the list of low stock items
+    return lowStockItems;
+  }
+  
+
   async findExpired(): Promise<BloodStock[]> {
     const currentDate = new Date();
-    return this.bloodStockModel.find({ expiry_date: { $lt: currentDate } }).exec();
-
-    //send notification for expired song
+    
+    const expiredBloodStocks = await this.bloodStockModel.find({ expiry_date: { $lt: currentDate } }).exec();
+  
+    if (expiredBloodStocks.length > 0) {
+      const emailRecipients = process.env.ADMIN_MAIL as string;
+      let message = 'ALERT: Expired Blood Stock\n';
+  
+      for (const stock of expiredBloodStocks) {
+        message += `Blood Type: ${stock.blood_type}, Storage Location: ${stock.storage_location}\n`;
+      }
+  
+      await this.emailService.sendMail(
+        emailRecipients,
+        'ALERT: Expired Blood Stock',
+        message,
+      );
+    }
+  
+    return expiredBloodStocks;
   }
+  
 
 
   async getAvailableStock(blood_type: string, storage_location: string): Promise<BloodStock | null> {
@@ -181,25 +230,6 @@ export class BloodStockService {
   }
 
 
-
-
-  
-
-  async notifyExpiredStock() {
-    const expiredStocks = await this.findExpired();
-    if (expiredStocks.length > 0) {
-      let message = 'The following blood stocks have expired:\n';
-      expiredStocks.forEach(stock => {
-        message += `${stock.blood_type} at ${stock.storage_location}, expired on ${stock.expiry_date}\n`;
-      });
-      // await this.emailService.sendEmail(
-      //   'Testfste@gmail.com',  //admin
-      //   'ALERT: Expired Blood Stocks',
-      //   message
-      // );
-    }
-  }
-
   async getSommeByBloodType() {
     const aggregate = [
       { $group: { _id: '$blood_type', totalQuantity: { $sum: '$quantity' } } },
@@ -218,7 +248,52 @@ export class BloodStockService {
 
   async getStocksNearExpiry(daysBeforeExpiry: number): Promise<BloodStock[]> {
     const currentDate = new Date();
-    const expiryseuil = new Date(currentDate.setDate(currentDate.getDate() + daysBeforeExpiry));
-    return this.bloodStockModel.find({ expiry_date: { $lt: expiryseuil } }).exec();
+    const expirySeuil = new Date(currentDate.setDate(currentDate.getDate() + daysBeforeExpiry));
+    
+    const nearExpiryStocks = await this.bloodStockModel.find({ expiry_date: { $lt: expirySeuil } }).exec();
+  
+    if (nearExpiryStocks.length > 0) {
+      const emailRecipients = process.env.ADMIN_MAIL as string;
+      let message = `ALERT: Blood Stocks Near Expiry\n`;
+  
+      for (const stock of nearExpiryStocks) {
+        message += `Blood Type: ${stock.blood_type}, Storage Location: ${stock.storage_location}, Expiry Date: ${stock.expiry_date.toDateString()}\n`;
+      }
+  
+      await this.emailService.sendMail(
+        emailRecipients,
+        'ALERT: Blood Stocks Near Expiry',
+        message,
+      );
+    }
+  
+    return nearExpiryStocks;
   }
+  
+
+  async notifyDonorstoDonate(bloodType: string): Promise<void> {
+    const eligibleDonors = await this.donorsService.eligible(bloodType);
+
+    if (eligibleDonors.length > 0) {
+      const emailRecipients = eligibleDonors.map(donor => donor.email).join(', ');
+      const message = `
+        ALERT: Request for Blood Donation
+
+        Dear Donor,
+
+        We are reaching out to kindly ask you to donate blood as soon as possible. Your blood type (${bloodType}) is urgently needed due to expired stock.
+
+        Please visit your nearest donation center to help save lives.
+
+        Thank you for your support!
+      `;
+
+      await this.emailService.sendMail(
+        emailRecipients,
+        'Urgent Blood Donation Request',
+        message,
+      );
+    }
+  }
+
 }
