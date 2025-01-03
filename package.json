@@ -22,7 +22,6 @@
     "start:dev": "nest start --watch"
   },
   "dependencies": {
-
     "@emailjs/browser": "^4.4.1",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^10.0.0",
@@ -41,6 +40,7 @@
     "dotenv": "^16.4.7",
     "emailjs-com": "^3.2.0",
     "express": "^4.21.2",
+    "express-session": "^1.18.1",
     "googleapis": "^144.0.0",
     "mjml": "^4.15.3",
     "mjml-cli": "^4.7.1",
@@ -60,6 +60,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
     "@types/jest": "^29.5.2",
     "@types/mongodb": "^4.0.6",
     "@types/node": "^22.9.3",

@@ -1,6 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import session from "express-session";
+import passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +14,19 @@ async function bootstrap() {
     forbidNonWhitelisted: true, // Throws an error if non-whitelisted properties are found
     disableErrorMessages: false, // Enables detailed error messages
   }));
+
+  app.use(
+    session ({
+      secret:"hjshdjshdjshdjshdjshhgfhgshfghsfg",
+      saveUninitialized: false,
+      resave: false,
+      cookie: {
+        maxAge: 60000,
+      },
+    }),
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   await app.listen(3000);
 }
