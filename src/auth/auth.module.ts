@@ -11,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtStartegy } from './strategies/jwt.strategy';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { RefreshJwtStartegy } from './strategies/refresh.strategy';
+import { SessionSerializer } from './utils/Serializer';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RefreshJwtStartegy } from './strategies/refresh.strategy';
       LocalStrategy,
       JwtStartegy,
       RefreshJwtStartegy,
+      SessionSerializer,
     ],
 })
 export class AuthModule {}

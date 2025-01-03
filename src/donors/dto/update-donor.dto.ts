@@ -19,7 +19,7 @@ export class UpdateDonorDto {
 
   @IsOptional()
   @IsString()
-  contact_info?: string; 
+  phone_number?: string; 
 
   @IsOptional()
   @Transform(({ value }) => new Date(value))

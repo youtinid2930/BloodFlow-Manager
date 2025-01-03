@@ -18,7 +18,7 @@ export class Donor extends Document {
   email!: string;
 
   @Prop({ required: true })
-  contact_info!: string;
+  phone_number!: string;
 
   @Prop({ required: true })
   last_donation_date!: Date; 
