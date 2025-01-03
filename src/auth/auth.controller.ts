@@ -16,7 +16,6 @@ import { RefreshAuthGuard } from './guards/auth-refresh/auth-refresh.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @HttpCode(HttpStatus.OK)
-  @Post()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req: AuthenticatedRequest){
@@ -53,7 +52,7 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   handleRedirect() {
-    return {msg: "OK"};
+    return "🔓 Login successful! Enjoy your session";
   }
   
   @UseGuards(RefreshAuthGuard)

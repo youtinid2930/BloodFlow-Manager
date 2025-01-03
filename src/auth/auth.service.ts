@@ -30,10 +30,18 @@ export class AuthService {
   async validateUser(loginDto: LoginDto): Promise<User> {
     const { email, password } = loginDto;
     
-    const user = this.validateByEmail(email);
+    const user = await this.validateByEmail(email);
+
     
+    console.log("inside validate user : user is :", user.password);
+
+    const realPassword = (await user).password;
     
-    const isPasswordValid = await bcrypt.compare(password, (await user).password);
+    console.log("inside validate user ", password, " and ", realPassword);
+    
+    const isPasswordValid = await bcrypt.compare(password, realPassword);
+
+    console.log("inside validate user ", isPasswordValid);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
     }
@@ -76,7 +84,9 @@ export class AuthService {
   }
 
   async validateByEmail(email: string): Promise<User> {
-    const user = await this.UserModel.findOne({ email });
+    const user = await this.userService.findByEmail(email);
+
+    console.log(user);
     if (!user) {
       throw new UnauthorizedException('User does not exist');
     }

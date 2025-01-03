@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -24,7 +24,7 @@ export class UsersService {
   // the probelm : we are using any here, to not have a problem with donor_id, so we didn't validate with the dto
   // however the fields are required.
   async create(createUserDto: any, createDonorDto: CreateDonorDto): Promise<User> {
-    const { email, password } = createUserDto;
+    const { email, password, role } = createUserDto;
     // first : Create the Donor
     const donor = await this.donorsService.create(createDonorDto);
     // hash the password
@@ -35,6 +35,7 @@ export class UsersService {
       email,
       password: hashedPassword,
       donor_id: donor._id,
+      role: role,
     });
     console.log(newUser);
     // Here we need to handle sending the email to the user to login in his account
@@ -102,5 +103,18 @@ export class UsersService {
     }
     updatedUser.refreshToken = hashedRefreshToken;
     return updatedUser.save();
+  }
+
+  // 8...
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.UserModel.findOne({ email }).lean<User>().exec();
+
+    console.log("this inside the findByEmail ", user);
+  
+    if (!user) {
+      throw new UnauthorizedException("User Not Found");
+    }
+  
+    return user; // Now the return type matches `User`.
   }
 }
