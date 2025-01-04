@@ -66,8 +66,10 @@ export class DonorsService {
     const ldd= new Date(donneur.last_donation_date);
     const diffInMs = now.getTime() - ldd.getTime();  //in ms
     const diffday = diffInMs / (1000*60*60*24); //convert to day
-     
-    return diffday >= 7;
+    // 8 week = 2 mois
+
+    console.log(diffday);
+    return diffday >= 56;
    
 
   }
@@ -75,17 +77,18 @@ export class DonorsService {
   async eligible(bloodType: string): Promise<Donor[]> {
     
     const eligibleDonors = await this.donorModel.find({blood_type: bloodType}).exec();
+    console.log(eligibleDonors);
     const filteredDonors: Donor[] = []; 
 
     for (const donor of eligibleDonors) {
-
+    
     const isEligible = await this.eligibility_check(donor._id); 
     if (isEligible) {
       filteredDonors.push(donor); 
     }
 
     };
-    return eligibleDonors;
+    return filteredDonors;
 
   }
 

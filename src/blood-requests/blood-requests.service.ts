@@ -80,6 +80,7 @@ export class BloodRequestService {
   
       // Process regular requests
       await this.processRequests(regulardemondes, 'regular');
+
       
     } catch (error) {
       console.error("Error processing requests:", error);
@@ -99,6 +100,7 @@ export class BloodRequestService {
             const location = stock.storage_location;
             await this.RepondreRequest_updateStock(request, availableStock, 'responded', location);
           }
+          return "Reponde to requests with success";
         } else {
           // Deny the request if no stock is available
           await this.update(request.id, { status: 'denied' });
@@ -110,6 +112,7 @@ export class BloodRequestService {
           ///
           console.log(`${type} request ID ${request.id} denied due to insufficient stock.`);
           // You can add a notification here if needed
+          return `${type} request ID ${request.id} denied due to insufficient stock.`;
         }
       } catch (error) {
         console.error(`Error handling ${type} request ID ${request.id}:`, error);

@@ -1,11 +1,16 @@
 import { Donor,DonorSchema } from './../donors/schemas/donor.schema';
 import { DonorsService } from './../donors/donors.service';
 import { CreateDonationDto } from './dto/create-donation.dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose'; 
 import { Donation } from './schemas/donations.schema';
 import { UpdateDonationDto } from './dto/update-donation.dto';
+import { ObjectId } from 'mongodb';
+import { BloodStock } from 'src/blood_stock/schemas/blood_stock.schema';
+import { BloodStockService } from 'src/blood_stock/blood_stock.service';
+import { Schema } from 'inspector/promises';
+
 
 
 @Injectable()
@@ -13,7 +18,9 @@ export class DonationService {
   constructor(
     @InjectModel(Donation.name) private DonationModel: Model<Donation>,
     @InjectModel(Donor.name) private donorModel: Model<Donor>,
+    @InjectModel(Donation.name) private BloodStockModel: Model<BloodStock>,
     private readonly DonorsService: DonorsService,
+    private readonly BloodStockService: BloodStockService
     
   ) {}
 
@@ -103,5 +110,69 @@ export class DonationService {
        throw new Error(`Erreur ${error}`);
   }
   
+  }
+
+  async isApproved (donationId: string, status: string) {
+    const donation = await this.DonationModel.findById(donationId).exec();
+
+    if(!donation) {
+      throw new UnauthorizedException("Donations does not exist");
+    }
+
+    if(donation.status == "pending") {
+      if(status == "approved") {
+        donation.status = "approved";
+        const updateDto = {
+          donor_id: donation.donor_id,
+          donation_date: donation.donation_date,
+          blood_type: donation.blood_type,
+          quantity: donation.quantity,
+          status: "approved",
+          location: donation.location
+        }
+        await this.update(donation._id, updateDto);
+       
+        const bloodStockEntry = {
+          blood_type: donation.blood_type,
+          quantity: donation.quantity,
+          storage_location: "Room 101", 
+          expiry_date: this.calculateExpiryDate(donation.donation_date),
+          last_update: new Date(),
+        };
+    
+        // Save the new blood stock
+        const createdBloodStock = await this.BloodStockService.create(bloodStockEntry);
+        if (!createdBloodStock) {
+          throw new Error('Failed to create blood stock');
+
+        }
+      }
+      else {
+        const updateDto = {
+          donor_id: donation.donor_id,
+          donation_date: donation.donation_date,
+          blood_type: donation.blood_type,
+          quantity: donation.quantity,
+          status: "rejected",
+          location: donation.location
+        }
+        await this.update(donation._id, updateDto);
+      }
+      
+  
+      return donation;
+      
+    }
+
+  
+  }
+
+  private calculateExpiryDate(donation_date: Date) {
+    const expiryDays = 42;
+    const expiryDate = new Date(donation_date);
+
+    expiryDate.setDate(expiryDate.getDate()+expiryDays);
+
+    return expiryDate;
   }
 }

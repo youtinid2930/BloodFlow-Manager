@@ -248,9 +248,13 @@ export class BloodStockService {
 
   async getStocksNearExpiry(daysBeforeExpiry: number): Promise<BloodStock[]> {
     const currentDate = new Date();
+
+    console.log(currentDate);
     const expirySeuil = new Date(currentDate.setDate(currentDate.getDate() + daysBeforeExpiry));
+
+    console.log(expirySeuil+" "+currentDate);
     
-    const nearExpiryStocks = await this.bloodStockModel.find({ expiry_date: { $lt: expirySeuil } }).exec();
+    const nearExpiryStocks = await this.bloodStockModel.find({ expiry_date: { $gt: expirySeuil } }).exec();
   
     if (nearExpiryStocks.length > 0) {
       const emailRecipients = process.env.ADMIN_MAIL as string;
@@ -271,7 +275,7 @@ export class BloodStockService {
   }
   
 
-  async notifyDonorstoDonate(bloodType: string): Promise<void> {
+  async notifyDonorstoDonate(bloodType: string): Promise<string> {
     const eligibleDonors = await this.donorsService.eligible(bloodType);
 
     if (eligibleDonors.length > 0) {
@@ -293,7 +297,12 @@ export class BloodStockService {
         'Urgent Blood Donation Request',
         message,
       );
+
+      return "Message Send to the Donors Successfly";
     }
+
+    return "Opps An Erreur privante Sending Emails";
+
   }
 
 }

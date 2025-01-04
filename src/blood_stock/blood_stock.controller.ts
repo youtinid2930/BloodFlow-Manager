@@ -162,7 +162,7 @@ export class BloodStockController {
     }
   }
 
-  @Get('stocks-near-expiry')
+  @Get('stocks/near-expiry')
   async getStocksNearExpiry(@Query('daysBeforeExpiry') daysBeforeExpiry: number) {
     try {
       return await this.bloodStockService.getStocksNearExpiry(daysBeforeExpiry);
@@ -173,7 +173,10 @@ export class BloodStockController {
   }
 
   ///greatest one
-
+  @Get('stock/notifyDonors/:blood_type') 
+  async notifyDonors (@Param('blood_type') blood_type: string) {
+    return await this.bloodStockService.notifyDonorstoDonate(blood_type);
+  }
 
 
 }

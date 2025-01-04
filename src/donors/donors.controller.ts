@@ -41,7 +41,7 @@ export class DonorsController {
   }
 
   @Get('eligible/:bloodType')
-  eligible(@Param('bt') bt:string){
+  eligible(@Param('bloodType') bt:string){
     return this.donorsService.eligible(bt);
   }
   
@@ -50,8 +50,8 @@ export class DonorsController {
     return await this.donorsService.donorsByType();
    }
 
-  @Get('getdonors/with')
-     async getByType(@Query('type')type:string) {
+  @Get('getdonors/:type')
+     async getByType(@Param('type')type:string) {
       return await this.donorsService.getDonorByType(type);
 
      }

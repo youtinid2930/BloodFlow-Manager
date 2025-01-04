@@ -18,11 +18,7 @@ export class UsersService {
     @InjectModel(User.name) private readonly UserModel: Model<User>,
     private readonly donorsService: DonorsService,
   ) {}
-  // 1...
-  // this methode will create the user, and automaticly create the donor document
-  // we need to worry about the donor_id, because it will be created automaticly
-  // the probelm : we are using any here, to not have a problem with donor_id, so we didn't validate with the dto
-  // however the fields are required.
+  
   async create(createUserDto: any, createDonorDto: CreateDonorDto): Promise<User> {
     const { email, password, role } = createUserDto;
     // first : Create the Donor
@@ -38,7 +34,7 @@ export class UsersService {
       role: role,
     });
     console.log(newUser);
-    // Here we need to handle sending the email to the user to login in his account
+    
     
     return newUser.save();
   }

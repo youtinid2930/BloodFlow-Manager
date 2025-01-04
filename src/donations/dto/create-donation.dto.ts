@@ -22,7 +22,7 @@ export class CreateDonationDto {
   quantity!: number; 
 
   @IsOptional()
-  @IsEnum(['pending', 'tested', 'approved', 'rejected'])
+  @IsEnum(['pending', 'approved', 'rejected'])
   status?: string; 
 
   @IsNotEmpty()

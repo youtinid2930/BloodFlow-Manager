@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { DonationService } from './donations.service';
 import { CreateDonationDto } from './dto/create-donation.dto';
 import { UpdateDonationDto } from './dto/update-donation.dto';
@@ -39,5 +39,10 @@ export class DonationsController {
   async nbreDonationsForId():Promise<Record<string,number>>{
    return this.donationsService.nbreDonationsById();
 
+  }
+
+  @Post('isApproved/:status')
+  async isApproved (@Query('donationId') donationId : string, @Param('status') status: string) {
+    return this.donationsService.isApproved(donationId, status);
   }
 }

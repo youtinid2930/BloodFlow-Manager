@@ -33,7 +33,7 @@ export class BloodRequestController {
   }
 
   @Post('request/match-requests')
-  matchRequestsWithStock() {
-    return this.requestsService.matchRequestWithStock();
+  async matchRequestsWithStock() {
+    return await this.requestsService.matchRequestWithStock();
   }
 }

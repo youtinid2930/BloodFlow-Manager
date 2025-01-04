@@ -9,6 +9,8 @@ import { GoogleAuthGuard } from './guards/Guard';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { AuthenticatedRequest } from '../interfaces/authenticated-request';
 import { RefreshAuthGuard } from './guards/auth-refresh/auth-refresh.guard';
+import { Roles } from 'src/roles/decorators/role.decorator';
+import { Role } from 'src/roles/enum/role.enum';
 
 
 
@@ -32,6 +34,7 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.admin)
   async getProfile(@Req() request: any): Promise<User> {
     const user = request.user; 
     const validatedUser = await this.authService.validateUser(user.email);

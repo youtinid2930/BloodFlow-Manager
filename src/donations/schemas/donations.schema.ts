@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema()
 export class Donation extends Document {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Donor', required: true })
-  donor_id!: MongooseSchema.Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'Donor', required: true })
+  donor_id!: Types.ObjectId;
 
   @Prop({ type: Date, required: true })
   donation_date!: Date;
@@ -15,7 +15,7 @@ export class Donation extends Document {
   @Prop({ type: Number, required: true })
   quantity!: number;
 
-  @Prop({ type: String, enum: ['pending', 'tested', 'approved', 'rejected'], default: 'pending' })
+  @Prop({ type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' })
   status!: string;
 
   @Prop({ type: String, required: true })
