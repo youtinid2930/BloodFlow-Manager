@@ -1,99 +1,136 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# BloodFlow Manager
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A backend REST API for hospital blood stock management, built with NestJS and MongoDB Atlas. Handles user authentication, donor management, blood unit inventory, and automated low-stock notifications.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- **Framework:** NestJS (TypeScript)
+- **Database:** MongoDB Atlas
+- **Auth:** JWT + Refresh Tokens + Google OAuth2
+- **Testing:** Jest (unit + e2e)
+- **Other:** Nodemailer (email notifications), Docker-ready
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## Modules
 
-```bash
-# development
-$ npm run start
+| Module | Responsibility | Author |
+|---|---|---|
+| `auth` | Login, JWT, refresh tokens, Google OAuth2, logout | youtinid2930 |
+| `users` | User creation, schema, role assignment | youtinid2930 |
+| `roles` | Role enum (admin, manager), RBAC guards & decorators | youtinid2930 |
+| `donors` | Donor registration and profiles | MohamedAgdid |
+| `donations` | Donation records and history | MohamedAgdid |
+| `blood_stock` | Blood unit inventory, expiry, low-stock alerts | MohamedAgdid |
+| `blood-requests` | Blood request workflow | MohamedAgdid |
+| `historique` | Action history tracking | MohamedAgdid |
+| `mail` | Email notification service | MohamedAgdid |
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
-```
+## API Endpoints
 
-## Run tests
+| Method | Route | Description |
+|---|---|---|
+| POST | `/auth/login` | Login with email/password (LocalAuthGuard) |
+| GET | `/auth/profile` | Get current user profile (JWT + Admin role required) |
+| GET | `/auth/verify/:token` | Verify JWT token validity |
+| GET | `/auth/google/login` | Initiate Google OAuth2 login |
+| GET | `/auth/google/redirect` | Google OAuth2 callback |
+| POST | `/auth/refresh` | Refresh access token using refresh token |
+| POST | `/auth/logout` | Logout and invalidate refresh token |
+| POST | `/blood-stock` | Add blood unit |
+| GET | `/blood-stock/all` | Get all blood units |
+| GET | `/blood-stock/find/low-stock` | Find low stock items |
+| GET | `/blood-stock/stock/expired` | Find expired units |
+| GET | `/blood-stock/stocks/near-expiry` | Units expiring soon |
+| GET | `/blood-stock/notify/low-stock` | Send low-stock email alert |
+| GET | `/blood-stock/stock/notifyDonors/:blood_type` | Notify donors to donate a specific blood type |
+| GET | `/blood-stock/stock/sommeby-blood` | Stock summary grouped by blood type |
 
-```bash
-# unit tests
-$ npm run test
+---
 
-# e2e tests
-$ npm run test:e2e
+## Getting Started
 
-# test coverage
-$ npm run test:cov
-```
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas account
+- npm
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Install
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+git clone https://github.com/youtinid2930/BloodFlow-Manager.git
+cd BloodFlow-Manager
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Environment Variables
 
-## Resources
+Create a `.env` file:
 
-Check out a few resources that may come in handy when working with NestJS:
+```env
+MONGODB_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_jwt_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+MAIL_USER=your_email@gmail.com
+MAIL_PASS=your_email_app_password
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Run
 
-## Support
+```bash
+# Development
+npm run start:dev
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Production
+npm run start:prod
+```
 
-## Stay in touch
+### Tests
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run test          # Unit tests
+npm run test:e2e      # End-to-end tests
+npm run test:cov      # Coverage report
+```
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Project Structure
+
+```
+src/
+├── auth/
+│   ├── config/         # JWT and OAuth config
+│   ├── dto/            # Login DTO
+│   ├── entities/       # RefreshToken entity
+│   ├── guards/         # JwtAuthGuard, GoogleAuthGuard, RefreshAuthGuard, LocalAuthGuard
+│   ├── strategies/     # Passport strategies (JWT, Google, Local)
+│   ├── types/          # Auth types
+│   ├── utils/          # Auth utilities
+│   ├── auth.controller.ts
+│   ├── auth.service.ts
+│   └── auth.module.ts
+├── users/              # User schema, service, controller
+├── roles/              # Role enum, RBAC decorator & guard
+├── blood_stock/        # Blood inventory management
+├── blood-requests/     # Request workflow
+├── donors/             # Donor profiles
+├── donations/          # Donation records
+├── historique/         # Action history
+├── mail/               # Email service
+└── interfaces/         # Shared interfaces (AuthenticatedRequest, etc.)
+```
+
+---
+
+## Contributors
+
+- **[youtinid2930](https://github.com/youtinid2930)** — Auth, Users, Roles modules
+- **[MohamedAgdid](https://github.com/MohamedAgdid)** — Blood stock, Donors, Donations, Mail, Historique modules
