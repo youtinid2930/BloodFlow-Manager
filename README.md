@@ -133,4 +133,5 @@ src/
 ## Contributors
 
 - **[youtinid2930](https://github.com/youtinid2930)** — Auth, Users, Roles modules
-- **[MohamedAgdid](https://github.com/MohamedAgdid)** — Blood stock, Donors, Donations, Mail, Historique modules
+- **[MohamedAgdid](https://github.com/MohamedAgdid)** — Blood stock, Donors, Donations, Mail modules
+- **[ABDELHALIMV2](https://github.com/ABDELHALIMV2)** —  Historique module
